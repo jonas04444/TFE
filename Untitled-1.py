@@ -1,2 +1,5 @@
-print("hello wordl")
-print("coucou")
+from tkinter import *
+
+root = Tk()
+
+root.mainloop()
