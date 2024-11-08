@@ -1,5 +1,5 @@
 from tkinter import *
-import tkinter.font as font
+from csvread import confirm_user
 
 def graph_select():
     win = Toplevel(root)
@@ -36,6 +36,8 @@ login_name = StringVar()
 name = Entry(root, textvariable=login_name)
 name.focus_set()
 name.pack()
+
+confirm_user(name)
 
 button_connect = Button(root, text="connexion", width=30 , height=3, command = graph_select )
 button_connect.pack()
