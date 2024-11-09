@@ -3,12 +3,12 @@ import pandas as pd
 def confirm_user(name):
     user_list = pd.read_excel('liste_graphiqueur.xlsx')
 
+    valid = 0
+
     print(user_list)
 
     for i in range (len(user_list)):
-        print(user_list['nom'][i])
         if user_list['nom'][i] == name:
-            print("c'est bon")
+            valid = 1
 
-name = "kellner"
-confirm_user(name)
+    return (valid)

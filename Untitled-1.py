@@ -18,8 +18,6 @@ def visitor():
     win_visitor = Toplevel(root)
     win_visitor.title("voir des données")
 
-
-
 root = Tk()
 
 root.title("analyse temps de parcours")
@@ -29,7 +27,7 @@ root.iconbitmap("logo-tec.ico")
 title = Label(root, text="analyse de temps de parcours", font=("Arial", 25))
 title.pack()
 
-login = Label(root, text="entrez votre login")
+login = Label(root, text="entrez votre identifiant")
 login.pack()
 
 login_name = StringVar()
@@ -37,11 +35,19 @@ name = Entry(root, textvariable=login_name)
 name.focus_set()
 name.pack()
 
-confirm_user(name)
+password = Label(root, text="entrez votre mot de passe")
+password.pack()
+
+password_log = StringVar()
+password_log = Entry(root, textvariable=password_log)
+password_log.focus_set()
+password_log.pack()
 
 button_connect = Button(root, text="connexion", width=30 , height=3, command = graph_select )
 button_connect.pack()
 button_visitor = Button(root, text="se connecter en tant que visiteur",width=30 , height=3, command=visitor)
 button_visitor.pack()
+
+
 
 root.mainloop()
