@@ -48,6 +48,4 @@ button_connect.pack()
 button_visitor = Button(root, text="se connecter en tant que visiteur",width=30 , height=3, command=visitor)
 button_visitor.pack()
 
-
-
 root.mainloop()
