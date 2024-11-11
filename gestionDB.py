@@ -1,6 +1,5 @@
 import sqlite3
-from multiprocessing.forkserver import connect_to_new_process
-
+from main import *
 
 def new_table():
     connect = sqlite3.connect("user.db")
@@ -19,15 +18,3 @@ def add_user(log, password):
     quest.execute("INSERT INTO Graphiqueur (identifiant, password) VALUES (?, ?)", (log, password))
     connect.commit()
     connect.close()
-
-def confirm_user(nomuser,password):
-    connect = sqlite3.connect("user.db")
-    quest = connect.cursor()
-    quest.execute("SELECT * FROM Graphiqueur")
-    quest.execute("SELECT identifiant FROM Graphiqueur WHERE identifiant = ? AND password = ?", (nomuser, password))
-    utilisateur = quest.fetchall()
-    quest.close()
-    if utilisateur:
-        print(utilisateur)
-    else:
-        print("personne")
