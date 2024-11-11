@@ -1,5 +1,6 @@
 from tkinter import *
-from gestionDB import add_user
+from gestionDB import add_user, confirm_user
+
 
 def graph_select():
     win = Toplevel(root)
@@ -43,7 +44,7 @@ password_log = Entry(root, textvariable=password_log)
 password_log.focus_set()
 password_log.pack()
 
-button_connect = Button(root, text="connexion", width=30 , height=3, command=lambda: add_user(login_name.get(), password_log.get()))
+button_connect = Button(root, text="connexion", width=30 , height=3, command=lambda: confirm_user(login_name.get(), password_log.get()))
 button_connect.pack()
 
 button_visitor = Button(root, text="se connecter en tant que visiteur",width=30 , height=3, command=visitor)
