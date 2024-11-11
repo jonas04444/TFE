@@ -1,5 +1,4 @@
 import sqlite3
-from csvread import confirm_user
 
 def new_table():
     connect = sqlite3.connect("user.db")
@@ -11,12 +10,13 @@ def new_table():
         """)
     connect.close()
 
-def add_user(adduser):
+def add_user(log, password):
+    #print(log,password)
     connect = sqlite3.connect("user.db")
     quest = connect.cursor()
-    quest.execute("INSERT INTO Graphiqueur (identifiant, password) VALUES (?, ?)", adduser)
+    quest.execute("INSERT INTO Graphiqueur (identifiant, password) VALUES (?, ?)", (log, password))
     connect.commit()
     connect.close()
 
-newuser = ('roxane', 1234)
-add_user(newuser)
+def confirm_user(log, password):
+    pass
