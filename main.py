@@ -59,7 +59,7 @@ password_label = Tk.Label(root, text="Entrez votre mot de passe")
 password_label.pack()
 
 password_log = Tk.StringVar()
-password_entry = Tk.Entry(root, textvariable=password_log, show="*")  # `show="*"` pour masquer le mot de passe
+password_entry = Tk.Entry(root, textvariable=password_log, show="*")
 password_entry.pack()
 
 button_connect = Tk.Button(root, text="Connexion", width=30, height=3, command=lambda: confirm_user(login_name.get(), password_log.get()))
