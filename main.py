@@ -1,24 +1,46 @@
-import tkinter as Tk
-from tkinter import messagebox
+import tkinter as tk
+from tkinter import messagebox, ttk
 import sqlite3
 
 def graph_select():
-    win = Tk.Toplevel(root)
+    ConDB = sqlite3.connect("user.db")
+    cursor = ConDB.cursor()
+
+    cursor.execute("SELECT * FROM Graphiqueur")
+    rows = cursor.fetchall()
+
+    win = tk.Toplevel(root)
     win.title("Section")
     win.geometry("500x500")
 
-    login_graph_select = Tk.Label(win, textvariable=login_name)
+    login_graph_select = tk.Label(win, textvariable=login_name)
     login_graph_select.pack()
 
-    button_generate = Tk.Button(win, text="Générer tableau comparatif")
+    button_generate = tk.Button(win, text="Générer tableau comparatif")
     button_generate.pack()
-    button_add_date = Tk.Button(win, text="Ajouter ou modifier des données")
+    button_add_date = tk.Button(win, text="Ajouter ou modifier des données")
     button_add_date.pack()
-    button_view_data = Tk.Button(win, text="Voir des données")
+    button_view_data = tk.Button(win, text="Voir des données")
     button_view_data.pack()
 
+    tree = ttk.Treeview(win, columns=(1, 2, 3), show="headings", height=8)
+    tree.pack()
+
+    tree.heading(1, text="ID")
+    tree.heading(2, text="Nom")
+    tree.heading(3, text="mdp")
+
+    for row in rows:
+        tree.insert('', 'end', values=row)
+
+    scrollbar = ttk.Scrollbar(win, orient="vertical", command=tree.yview)
+    scrollbar.pack(side='right', fill='y')
+    tree.configure(yscroll=scrollbar.set)
+
+    ConDB.close()
+
 def visitor():
-    win_visitor = Tk.Toplevel(root)
+    win_visitor = tk.Toplevel(root)
     win_visitor.title("Voir des données")
 
 def confirm_user(nomuser, password):
@@ -39,33 +61,32 @@ def confirm_user(nomuser, password):
     else:
         messagebox.showerror("ERREUR", "Nom d'utilisateur ou mot de passe incorrect")
 
-
-root = Tk.Tk()
+root = tk.Tk()
 root.title("Analyse temps de parcours")
 root.geometry("600x600")
 
-title = Tk.Label(root, text="Analyse de temps de parcours", font=("Arial", 25))
+title = tk.Label(root, text="Analyse de temps de parcours", font=("Arial", 25))
 title.pack()
 
-login = Tk.Label(root, text="Entrez votre identifiant")
+login = tk.Label(root, text="Entrez votre identifiant")
 login.pack()
 
-login_name = Tk.StringVar()
-name_entry = Tk.Entry(root, textvariable=login_name)
+login_name = tk.StringVar()
+name_entry = tk.Entry(root, textvariable=login_name)
 name_entry.focus_set()
 name_entry.pack()
 
-password_label = Tk.Label(root, text="Entrez votre mot de passe")
+password_label = tk.Label(root, text="Entrez votre mot de passe")
 password_label.pack()
 
-password_log = Tk.StringVar()
-password_entry = Tk.Entry(root, textvariable=password_log, show="*")
+password_log = tk.StringVar()
+password_entry = tk.Entry(root, textvariable=password_log, show="*")
 password_entry.pack()
 
-button_connect = Tk.Button(root, text="Connexion", width=30, height=3, command=lambda: confirm_user(login_name.get(), password_log.get()))
+button_connect = tk.Button(root, text="Connexion", width=30, height=3, command=lambda: confirm_user(login_name.get(), password_log.get()))
 button_connect.pack()
 
-button_visitor = Tk.Button(root, text="Se connecter en tant que visiteur", width=30, height=3, command=visitor)
+button_visitor = tk.Button(root, text="Se connecter en tant que visiteur", width=30, height=3, command=visitor)
 button_visitor.pack()
 
 root.mainloop()
