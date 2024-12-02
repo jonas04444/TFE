@@ -3,10 +3,10 @@ from tkinter import messagebox, ttk
 import sqlite3
 
 def graph_select():
-    ConDB = sqlite3.connect("user.db")
+    ConDB = sqlite3.connect("listelieux.db")
     cursor = ConDB.cursor()
 
-    cursor.execute("SELECT * FROM Graphiqueur")
+    cursor.execute("SELECT * FROM NomLieux")
     rows = cursor.fetchall()
 
     win = tk.Toplevel(root)
@@ -23,18 +23,22 @@ def graph_select():
     button_view_data = tk.Button(win, text="Voir des données")
     button_view_data.pack()
 
-    tree = ttk.Treeview(win, columns=(1, 2, 3), show="headings", height=8)
-    tree.pack()
+    frame = tk.Frame(win)
+    frame.pack(fill='both', expand=True)
 
-    tree.heading(1, text="ID")
-    tree.heading(2, text="Nom")
-    tree.heading(3, text="mdp")
+    tree = ttk.Treeview(frame, columns=(1, 2, 3), show="headings", height=8)
+    tree.pack(side='left', fill='both', expand=True)
+
+    tree.heading(1, text="NomLieux")
+    tree.heading(2, text="Description")
+    tree.heading(3, text="Ville")
 
     for row in rows:
         tree.insert('', 'end', values=row)
 
-    scrollbar = ttk.Scrollbar(win, orient="vertical", command=tree.yview)
+    scrollbar = ttk.Scrollbar(frame, orient="vertical", command=tree.yview)
     scrollbar.pack(side='right', fill='y')
+
     tree.configure(yscroll=scrollbar.set)
 
     ConDB.close()
