@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import messagebox, ttk
 import sqlite3
-from gestionDB import add_lieux, confirm_user
+from gestionDB import add_lieux
 
 
 def graph_select():
@@ -25,6 +25,10 @@ def graph_select():
     button_view_data = tk.Button(win, text="Voir des données")
     button_view_data.pack()
 
+    button_generate = tk.Button(win, text="gestion lieux", width=30, height=3,
+                               command=lambda: gestionLieux())
+    button_generate.pack()
+
     frame = tk.Frame(win)
     frame.pack(fill='both', expand=True)
 
@@ -43,7 +47,59 @@ def graph_select():
 
     tree.configure(yscroll=scrollbar.set)
 
+
     ConDB.close()
+
+def confirm_user(nomuser, password):
+    connect = sqlite3.connect("user.db")
+    quest = connect.cursor()
+    try:
+        quest.execute("SELECT identifiant FROM Graphiqueur WHERE identifiant = ? AND password = ?", (nomuser, password))
+        utilisateur = quest.fetchall()
+    except sqlite3.Error as e:
+        messagebox.showerror("Erreur Base de Données", f"Erreur lors de la connexion : {e}")
+    finally:
+        quest.close()
+        connect.close()
+
+    if utilisateur:
+        graph_select()
+        #print("Utilisateur trouvé :", utilisateur)
+    else:
+        messagebox.showerror("ERREUR", "Nom d'utilisateur ou mot de passe incorrect")
+
+def gestionLieux():
+    win_gestionLIeux = tk.Toplevel(root)
+    win_gestionLIeux.title("gestion des lieux")
+
+    login = tk.Label(root, text="Entrez le nom d'un Lieux")
+    login.pack()
+
+    IDLieux = tk.StringVar()
+    name_entry = tk.Entry(root, textvariable=IDLieux)
+    name_entry.focus_set()
+    name_entry.pack()
+
+    login = tk.Label(root, text="Entrez la description du lieux")
+    login.pack()
+
+    Description = tk.StringVar()
+    name_entry = tk.Entry(root, textvariable=Description)
+    name_entry.focus_set()
+    name_entry.pack()
+
+    login = tk.Label(root, text="Entrez le nom de la ville")
+    login.pack()
+
+    Ville = tk.StringVar()
+    name_entry = tk.Entry(root, textvariable=Ville)
+    name_entry.focus_set()
+    name_entry.pack()
+
+    button_connect = tk.Button(root, text="création de Lieux", width=30, height=3,
+                               command=lambda: add_lieux(IDLieux.get(), Description.get(), Ville.get()))
+    button_connect.pack()
+
 
 def visitor():
     win_visitor = tk.Toplevel(root)
@@ -72,33 +128,6 @@ password_entry = tk.Entry(root, textvariable=password_log, show="*")
 password_entry.pack()
 
 button_connect = tk.Button(root, text="Connexion", width=30, height=3, command=lambda: confirm_user(login_name.get(), password_log.get()))
-button_connect.pack()
-
-login = tk.Label(root, text="Entrez le nom d'un Lieux")
-login.pack()
-
-IDLieux = tk.StringVar()
-name_entry = tk.Entry(root, textvariable=IDLieux)
-name_entry.focus_set()
-name_entry.pack()
-
-login = tk.Label(root, text="Entrez la description du lieux")
-login.pack()
-
-Description = tk.StringVar()
-name_entry = tk.Entry(root, textvariable=Description)
-name_entry.focus_set()
-name_entry.pack()
-
-login = tk.Label(root, text="Entrez le nom de la ville")
-login.pack()
-
-Ville = tk.StringVar()
-name_entry = tk.Entry(root, textvariable=Ville)
-name_entry.focus_set()
-name_entry.pack()
-
-button_connect = tk.Button(root, text="création de Lieux", width=30, height=3, command=lambda: add_lieux(IDLieux.get(), Description.get(), Ville.get()))
 button_connect.pack()
 
 button_visitor = tk.Button(root, text="Se connecter en tant que visiteur", width=30, height=3, command=visitor)
