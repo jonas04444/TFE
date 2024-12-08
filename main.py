@@ -71,32 +71,35 @@ def confirm_user(nomuser, password):
 def gestionLieux():
     win_gestionLIeux = tk.Toplevel(root)
     win_gestionLIeux.title("gestion des lieux")
+    win_gestionLIeux.geometry("600x600")
 
-    login = tk.Label(root, text="Entrez le nom d'un Lieux")
+    win_gestionLIeux.title("gestion des lieux")
+
+    login = tk.Label(win_gestionLIeux, text="Entrez le nom d'un Lieux")
     login.pack()
 
     IDLieux = tk.StringVar()
-    name_entry = tk.Entry(root, textvariable=IDLieux)
+    name_entry = tk.Entry(win_gestionLIeux, textvariable=IDLieux)
     name_entry.focus_set()
     name_entry.pack()
 
-    login = tk.Label(root, text="Entrez la description du lieux")
+    login = tk.Label(win_gestionLIeux, text="Entrez la description du lieux")
     login.pack()
 
     Description = tk.StringVar()
-    name_entry = tk.Entry(root, textvariable=Description)
+    name_entry = tk.Entry(win_gestionLIeux, textvariable=Description)
     name_entry.focus_set()
     name_entry.pack()
 
-    login = tk.Label(root, text="Entrez le nom de la ville")
+    login = tk.Label(win_gestionLIeux, text="Entrez le nom de la ville")
     login.pack()
 
     Ville = tk.StringVar()
-    name_entry = tk.Entry(root, textvariable=Ville)
+    name_entry = tk.Entry(win_gestionLIeux, textvariable=Ville)
     name_entry.focus_set()
     name_entry.pack()
 
-    button_connect = tk.Button(root, text="création de Lieux", width=30, height=3,
+    button_connect = tk.Button(win_gestionLIeux, text="création de Lieux", width=30, height=3,
                                command=lambda: add_lieux(IDLieux.get(), Description.get(), Ville.get()))
     button_connect.pack()
 
