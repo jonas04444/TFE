@@ -104,8 +104,14 @@ def gestionLieux():
 
     button_connect.pack()
 
-    lieux_objets = NomLieux.item_db(NomLieux)
-    lieux_noms = [lieu.nom_lieux for lieu in lieux_objets]
+    lieuxdebut_objets = NomLieux.item_db(NomLieux)
+    lieux_noms = [lieu.nom_lieux for lieu in lieuxdebut_objets]
+
+    listelieux = ttk.Combobox(win_gestionLIeux, values=lieux_noms)
+    listelieux.pack()
+
+    lieuxfin_objets = NomLieux.item_db(NomLieux)
+    lieux_noms = [lieu.nom_lieux for lieu in lieuxfin_objets]
 
     listelieux = ttk.Combobox(win_gestionLIeux, values=lieux_noms)
     listelieux.pack()
