@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import messagebox, ttk
 import sqlite3
 from gestionDB import add_lieux
-
+from objetdb import NomLieux
 
 def graph_select():
     ConDB = sqlite3.connect("listelieux.db")
@@ -101,8 +101,14 @@ def gestionLieux():
 
     button_connect = tk.Button(win_gestionLIeux, text="création de Lieux", width=30, height=3,
                                command=lambda: add_lieux(IDLieux.get(), Description.get(), Ville.get()))
+
     button_connect.pack()
 
+    lieux_objets = NomLieux.item_db(NomLieux)
+    lieux_noms = [lieu.nom_lieux for lieu in lieux_objets]
+
+    listelieux = ttk.Combobox(win_gestionLIeux, values=lieux_noms)
+    listelieux.pack()
 
 def visitor():
     win_visitor = tk.Toplevel(root)
