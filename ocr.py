@@ -1,8 +1,8 @@
 import pytesseract
 from PIL import Image
 
-# Charger une image pour tester
-image = Image.open("Sans titre.png")  # Remplacez par le chemin de votre image
-text = pytesseract.image_to_string(image)
-print("Texte extrait :", text)
+pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
 
+image = Image.open("Sans titre.png")
+text = pytesseract.image_to_string(image)
+print(text)
