@@ -64,7 +64,7 @@ def confirm_user(nomuser, password):
 
     if utilisateur:
         graph_select()
-        #print("Utilisateur trouvé :", utilisateur)
+        #print("Utilisateur:", utilisateur)
     else:
         messagebox.showerror("ERREUR", "Nom d'utilisateur ou mot de passe incorrect")
 
