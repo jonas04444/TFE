@@ -9,7 +9,7 @@ text = pytesseract.image_to_string(image)
 
 lines = text.strip().split("\n")
 
-premierPL = lines[14].strip().split()
+premierPL = lines[0].strip().split()
 print(premierPL)
 
 for line in lines:
