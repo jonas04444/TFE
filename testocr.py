@@ -35,7 +35,7 @@ def load_image_and_process():
 
     # Construire les colonnes
     max_cols = max(len(row) for row in data_rows)
-    columns = ["Orig.", "Dest.", "Dist."] + [f"Time {i+1}" for i in range(max_cols - 3)]
+    columns = ["Orig.", "Dest.", "Dist."] + [f"temps {i+1}" for i in range(max_cols - 3)]
 
     # Créer un DataFrame pour simplifier la gestion des données
     global df

@@ -8,10 +8,21 @@ text = pytesseract.image_to_string(image)
 #print(text)
 
 lines = text.strip().split("\n")
+firstline = -1
+lastline = -1
 
-premierPL = lines[0].strip().split()
-print(premierPL)
+for i,index in enumerate(lines):
+    if "Orig." in index:
+        firstline = i
+    elif "Total" in index:
+        lastline = i
+        break
 
-for line in lines:
-    ligne_separee = line.strip().split()
-    print(ligne_separee)
+#premierPL = lines[firstline-1].strip().split()
+#print(premierPL)
+
+for i in lines [firstline-1:lastline+1]:
+    print(i.strip().split())
+#for line in lines:
+#    ligne_separee = line.strip().split()
+#    print(ligne_separee)
