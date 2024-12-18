@@ -2,7 +2,7 @@ import pytesseract
 from PIL import Image
 import pandas as pd
 import tkinter as tk
-from tkinter import ttk  # Import du sous-module ttk
+from tkinter import ttk
 
 image = Image.open("Sans titre.png")
 text = pytesseract.image_to_string(image)
@@ -30,9 +30,9 @@ data = [line.strip().split() for line in lines[firstline + 1:lastline]]
 
 cleaned_data = [[value for value in row if value != "="] for row in data]
 
-for i, row in enumerate(data):
-    if len(row) != len(data[0]):
-        print(f"Alerte : La ligne {i + 1} a une longueur différente ({len(row)}) des autres lignes ({len(data[0])}).")
+for i, row in enumerate(cleaned_data):
+    if len(row) != len(cleaned_data[0]):
+        print(f"trop de colonne")
 
 columns = ["Orig.", "Dest.", "Dist."] + tranchehoraire
 
@@ -54,15 +54,15 @@ root.geometry("900x600")
 table_frame = tk.Frame(root)
 table_frame.pack(fill="both", expand=True)
 
-tree = ttk.Treeview(table_frame, columns=list(df.columns), show="headings", height=20)
+tableauhoraire = ttk.Treeview(table_frame, columns=list(df.columns), show="headings", height=20)
 
 for col in df.columns:
-    tree.heading(col, text=col)
-    tree.column(col, width=100, anchor="center")
+    tableauhoraire.heading(col, text=col)
+    tableauhoraire.column(col, width=100, anchor="center")
 
 for _, row in df.iterrows():
-    tree.insert("", tk.END, values=list(row))
+    tableauhoraire.insert("", tk.END, values=list(row))
 
-tree.pack(fill="both", expand=True)
+tableauhoraire.pack(fill="both", expand=True)
 
 root.mainloop()
