@@ -28,6 +28,8 @@ else:
 
 data = [line.strip().split() for line in lines[firstline + 1:lastline]]
 
+cleaned_data = [[value for value in row if value != "="] for row in data]
+
 for i, row in enumerate(data):
     if len(row) != len(data[0]):
         print(f"Alerte : La ligne {i + 1} a une longueur différente ({len(row)}) des autres lignes ({len(data[0])}).")
@@ -35,9 +37,15 @@ for i, row in enumerate(data):
 columns = ["Orig.", "Dest.", "Dist."] + tranchehoraire
 
 max_len = len(columns)
-normalized_data = [row + [""] * (max_len - len(row)) if len(row) < max_len else row[:max_len] for row in data]
+normalized_data = [row + [""] * (max_len - len(row)) if len(row) < max_len else row[:max_len] for row in cleaned_data]
 
 df = pd.DataFrame(normalized_data, columns=columns)
+
+for col in df.columns[2:]:
+    df[col] = pd.to_numeric(df[col], errors="coerce").fillna(0)
+
+total_row = ["Total", ""] + [df[col].sum() for col in df.columns[2:]]
+df.loc[len(df)] = total_row
 
 root = tk.Tk()
 root.title("Test Tableau")
