@@ -14,8 +14,8 @@ class NomLieux:
         return [listedblieux(row[0], row[1], row[2]) for row in rows]
 
 class PaireLieux:
-    def __init__(self, idPairelieux, LieuxDepart, LieuxArrivee, distance):
-        self.idPairelieux = idPairelieux
+    def __init__(self, LieuxDepart, LieuxArrivee, distance):
+        #self.idPairelieux = idPairelieux
         self.Start = LieuxDepart
         self.end = LieuxArrivee
         self.distance = distance
@@ -23,9 +23,9 @@ class PaireLieux:
     def add_db(self):
         connect = sqlite3.connect("listelieux.db")
         cursor = connect.cursor()
-        cursor.execute("INSERT INTO PaireLieux (Lieuxdepart, LieuxArrivee, "
-                       "Distance VALUES (?,?,?)",
-                       self.start.nom_lieux, self.end.nom_lieux, self.distance)
+        cursor.execute(
+            "INSERT INTO PaireLieux (LieuxDepart, LieuxArrivee, Distance) VALUES (?, ?, ?)",
+            (self.Start.nom_lieux, self.end.nom_lieux, self.distance) )
         connect.commit()
         connect.close()
 
@@ -55,3 +55,11 @@ class Composition:
     def __init__(self, IdLigne, IdpaireLieux):
         self.idligne = IdLigne
         self.idpairelieux = IdpaireLieux
+
+JUMA2 = NomLieux("jumet Madeleine","station métro","Jumet")
+JUCAR = NomLieux("jumet Carosse", "croisement métro", "Jumet")
+
+depart41 = PaireLieux(JUMA2, JUCAR, 833)
+depart41.add_db()
+
+print(depart41.Start.nom_lieux)
