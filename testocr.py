@@ -1,95 +1,107 @@
-import pytesseract
-from PIL import Image
-import pandas as pd
-import tkinter as tk
-from tkinter import ttk
-from tkinter import filedialog, messagebox
+import sqlite3
+
+class NomLieux:
+    def __init__(self, nom_lieux, description, ville):
+        self.nom_lieux = nom_lieux
+        self.description = description
+        self.ville = ville
+
+    def __str__(self):
+        return f"NomLieux: {self.nom_lieux}, Description: {self.description}, Ville: {self.ville}"
+
+    @staticmethod
+    def item_db(listedblieux):
+        """Récupère les lieux depuis la base de données."""
+        connect = sqlite3.connect("listelieux.db")
+        cursor = connect.cursor()
+        cursor.execute("SELECT NomLieux, Description, Ville FROM NomLieux")
+        rows = cursor.fetchall()
+        connect.close()
+        return [listedblieux(row[0], row[1], row[2]) for row in rows]
 
 
-def load_image_and_process():
-    # Charger l'image et extraire le texte avec OCR
-    image_path = filedialog.askopenfilename(title="Sélectionnez une image", filetypes=[("Images", "*.png *.jpg *.jpeg")])
-    if not image_path:
-        return
+class PaireLieux:
+    def __init__(self, LieuxDepart, LieuxArrivee, distance):
+        self.Start = LieuxDepart
+        self.end = LieuxArrivee
+        self.distance = distance
 
-    image = Image.open(image_path)
-    text = pytesseract.image_to_string(image)
+    def add_db(self):
+        """Ajoute une paire de lieux dans la base de données."""
+        try:
+            connect = sqlite3.connect("listelieux.db", timeout=10)
+            cursor = connect.cursor()
+            cursor.execute(
+                "INSERT INTO PaireLieux (LieuxDepart, LieuxArrivee, distance) VALUES (?, ?, ?)",
+                (self.Start.nom_lieux, self.end.nom_lieux, self.distance))
+            connect.commit()
+            print(f"Ajout réussi : {self.Start.nom_lieux} -> {self.end.nom_lieux}, Distance: {self.distance} m")
+        except sqlite3.Error as e:
+            print(f"Erreur SQLite : {e}")
+        finally:
+            if connect:
+                connect.close()
 
-    # Découper le texte par lignes
-    lines = text.strip().split("\n")
+    def __str__(self):
+        return f"PaireLieux: {self.Start.nom_lieux} -> {self.end.nom_lieux}, Distance: {self.distance} m"
 
-    # Traiter les données extraites
-    data_rows = []
-    for line in lines:
-        parts = line.strip().split()
-        if len(parts) >= 3:
-            try:
-                float(parts[2])  # Vérifier que la troisième colonne est un nombre
-                data_rows.append(parts)
-            except ValueError:
-                continue
-
-    if not data_rows:
-        messagebox.showerror("Erreur", "Aucune donnée valide extraite de l'image.")
-        return
-
-    # Construire les colonnes
-    max_cols = max(len(row) for row in data_rows)
-    columns = ["Orig.", "Dest.", "Dist."] + [f"temps {i+1}" for i in range(max_cols - 3)]
-
-    # Créer un DataFrame pour simplifier la gestion des données
-    global df
-    df = pd.DataFrame(data_rows, columns=columns[:max_cols])
-
-    # Afficher les données dans l'interface
-    display_table()
+    @staticmethod
+    def item_db_pairel(listedbpl):
+        """Récupère les paires de lieux depuis la base de données."""
+        connect = sqlite3.connect("listelieux.db")
+        cursor = connect.cursor()
+        cursor.execute("SELECT IDPaireLieux, LieuxDepart, LieuxArrivee FROM PaireLieux")
+        rows = cursor.fetchall()
+        connect.close()
+        return [listedbpl(row[0], row[1], row[2]) for row in rows]
 
 
-def display_table():
-    # Réinitialiser le tableau Treeview
-    for widget in table_frame.winfo_children():
-        widget.destroy()
+class Ligne:
+    def __init__(self, idLigne, NumLigne, Sens):
+        self.idLigne = idLigne
+        self.NumLigne = NumLigne
+        self.sens = Sens
 
-    # Création du tableau Treeview
-    tree = ttk.Treeview(table_frame, columns=list(df.columns), show="headings", height=20)
-
-    # Définir les colonnes
-    for col in df.columns:
-        tree.heading(col, text=col)
-        tree.column(col, width=100, anchor="center")
-
-    # Insérer les données dans le tableau
-    for _, row in df.iterrows():
-        tree.insert("", tk.END, values=list(row))
-
-    tree.pack(fill="both", expand=True)
-
-    # Ajouter un bouton pour sauvegarder les modifications
-    save_button = tk.Button(table_frame, text="Sauvegarder en CSV", command=save_to_csv)
-    save_button.pack(pady=10)
+    def __str__(self):
+        return f"Ligne: {self.NumLigne}, Sens: {self.sens}"
 
 
-def save_to_csv():
-    # Enregistrer le tableau modifié dans un fichier CSV
-    save_path = filedialog.asksaveasfilename(title="Enregistrer sous", defaultextension=".csv",
-                                             filetypes=[("CSV files", "*.csv")])
-    if save_path:
-        df.to_csv(save_path, index=False)
-        messagebox.showinfo("Succès", f"Tableau sauvegardé sous {save_path}")
+class TempsEntreLieux:
+    def __init__(self, idTemps, HeureDebut, Heurefin, Temps, VersionTemps, PaireLieux):
+        self.idTemps = idTemps
+        self.HeureDebut = HeureDebut
+        self.Heurefin = Heurefin
+        self.temps = Temps
+        self.versiontemps = VersionTemps
+        self.pairelieux = PaireLieux
+
+    def __str__(self):
+        return (f"TempsEntreLieux: Début {self.HeureDebut}, Fin {self.Heurefin}, "
+                f"Temps {self.temps} min, Version {self.versiontemps}")
 
 
-# Création de l'interface Tkinter
-root = tk.Tk()
-root.title("OCR Tableau Modifiable")
-root.geometry("900x600")
+class Composition:
+    def __init__(self, IdLigne, IdpaireLieux):
+        self.idligne = IdLigne
+        self.idpairelieux = IdpaireLieux
 
-# Ajouter un bouton pour charger une image
-load_button = tk.Button(root, text="Charger une image", command=load_image_and_process)
-load_button.pack(pady=10)
+    def __str__(self):
+        return f"Composition: Ligne {self.idligne}, PaireLieux {self.idpairelieux}"
 
-# Cadre pour afficher le tableau
-table_frame = tk.Frame(root)
-table_frame.pack(fill="both", expand=True)
 
-# Lancer l'application
-root.mainloop()
+# Exemple d'utilisation
+if __name__ == "__main__":
+    # Création d'objets NomLieux
+    JUMA2 = NomLieux("jumet Madeleine", "station métro", "Jumet")
+    JUCAR = NomLieux("jumet Carosse", "croisement métro", "Jumet")
+
+    # Création d'une paire de lieux
+    depart41 = PaireLieux(JUMA2, JUCAR, 833)
+
+    # Ajout dans la base de données
+    depart41.add_db()
+
+    # Affichage des objets
+    print(JUMA2)
+    print(JUCAR)
+    print(depart41)

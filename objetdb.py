@@ -11,6 +11,7 @@ class NomLieux:
         cursor = connect.cursor()
         cursor.execute("SELECT NomLieux, Description, Ville FROM NomLieux")
         rows = cursor.fetchall()
+        connect.close()
         return [listedblieux(row[0], row[1], row[2]) for row in rows]
 
 class PaireLieux:
@@ -21,19 +22,27 @@ class PaireLieux:
         self.distance = distance
 
     def add_db(self):
-        connect = sqlite3.connect("listelieux.db")
-        cursor = connect.cursor()
-        cursor.execute(
-            "INSERT INTO PaireLieux (LieuxDepart, LieuxArrivee, Distance) VALUES (?, ?, ?)",
-            (self.Start.nom_lieux, self.end.nom_lieux, self.distance) )
-        connect.commit()
-        connect.close()
+        connect = None
+        try:
+            connect = sqlite3.connect("listelieux.db", timeout=10)
+            cursor = connect.cursor()
+            cursor.execute(
+                "INSERT INTO PaireLieux (LieuxDepart, LieuxArrivee, distance) VALUES (?, ?, ?)",
+                (self.Start.nom_lieux, self.end.nom_lieux, self.distance))
+            connect.commit()
+        except sqlite3.Error as e:
+            print(f"Erreur SQLite : {e}")
+        finally:
+            if connect:
+                connect.close()
+                print("Connexion SQLite fermée.")
 
     def item_db_pairel(listedbpl):
         connect = sqlite3.connect("listelieux.db")
         cursor = connect.cursor()
         cursor.execute("SELECT IDPaireLieux, LieuxDepart, LieuxArrivee FROM PaireLieux")
         rows = cursor.fetchall()
+        connect.close()
         return [listedbpl(row[0], row[1], row[2]) for row in rows]
 
 class Ligne:
@@ -60,6 +69,6 @@ JUMA2 = NomLieux("jumet Madeleine","station métro","Jumet")
 JUCAR = NomLieux("jumet Carosse", "croisement métro", "Jumet")
 
 depart41 = PaireLieux(JUMA2, JUCAR, 833)
-depart41.add_db()
+
 
 print(depart41.Start.nom_lieux)
