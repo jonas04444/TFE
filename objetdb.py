@@ -1,7 +1,7 @@
 import sqlite3
 
 class NomLieux:
-    def __init__(self, nom_lieux, description, ville):
+    def __init__(self, nom_lieux: str, description: str, ville: str):
         self.nom_lieux = nom_lieux
         self.description = description
         self.ville = ville
@@ -38,7 +38,7 @@ class NomLieux:
             connect.close()
 
 class PaireLieux:
-    def __init__(self, LieuxDepart, LieuxArrivee, distance):
+    def __init__(self, LieuxDepart, LieuxArrivee, distance: int):
         #self.idPairelieux = idPairelieux
         self.Start = LieuxDepart
         self.end = LieuxArrivee
@@ -69,13 +69,13 @@ class PaireLieux:
         return [listedbpl(row[0], row[1], row[2]) for row in rows]
 
 class Ligne:
-    def __init__(self, idLigne, NumLigne, Sens):
+    def __init__(self, idLigne: int, NumLigne: int, Sens: str):
         self.idLigne = idLigne
         self.NumLigne = NumLigne
         self.sens = Sens
 
 class TempsEntreLieux:
-    def __init__(self, idTemps, HeureDebut, Heurefin, Temps, VersionTemps, PaireLieux):
+    def __init__(self, idTemps: int, HeureDebut: str, Heurefin: str, Temps: int, VersionTemps: str, PaireLieux):
         self.idTemps = idTemps
         self.HeureDebut = HeureDebut
         self.Heurefin = Heurefin
@@ -84,7 +84,23 @@ class TempsEntreLieux:
         self.pairelieux = PaireLieux
 
 class Composition:
-    def __init__(self, IdLigne, IdpaireLieux):
+    def __init__(self, IdLigne):
         self.idligne = IdLigne
-        self.idpairelieux = IdpaireLieux
+        self.idpairelieux = []
 
+    def addpairelieux(self):
+        pass
+
+ligne41 = Ligne(141,41,"aller")
+
+JUMA2 = NomLieux("JUMA2", "test","jumet")
+JUCAR = NomLieux("JUCAR", "test 2", "Jumet")
+
+JUMA2JUCAR = PaireLieux(JUMA2,JUCAR,833)
+
+TJUMA2JUCAR = TempsEntreLieux(1,"0:00", "6:59", 2, "C0041", JUMA2JUCAR)
+
+TEST = Composition(ligne41)
+
+print(TEST.idligne.NumLigne)
+print(TJUMA2JUCAR.HeureDebut, TJUMA2JUCAR.Heurefin)
