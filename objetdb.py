@@ -68,6 +68,9 @@ class PaireLieux:
         connect.close()
         return [listedbpl(row[0], row[1], row[2]) for row in rows]
 
+    def __repr__(self):
+        return f"PaireLieux(Start={self.Start.nom_lieux}, End={self.end.nom_lieux}, Distance={self.distance})"
+
 class Ligne:
     def __init__(self, idLigne: int, NumLigne: int, Sens: str):
         self.idLigne = idLigne
@@ -88,19 +91,23 @@ class Composition:
         self.idligne = IdLigne
         self.idpairelieux = []
 
-    def addpairelieux(self):
-        pass
+    def addpairelieux(self, pairelieux):
+        self.idpairelieux.append(pairelieux)
 
 ligne41 = Ligne(141,41,"aller")
 
 JUMA2 = NomLieux("JUMA2", "test","jumet")
 JUCAR = NomLieux("JUCAR", "test 2", "Jumet")
+GOCAL = NomLieux("GOCAL","calvaire","gosselies")
 
 JUMA2JUCAR = PaireLieux(JUMA2,JUCAR,833)
+JUCARGOCAL = PaireLieux(JUCAR,GOCAL,979)
 
 TJUMA2JUCAR = TempsEntreLieux(1,"0:00", "6:59", 2, "C0041", JUMA2JUCAR)
 
 TEST = Composition(ligne41)
+TEST.addpairelieux(JUMA2JUCAR)
+TEST.addpairelieux(JUCARGOCAL)
 
-print(TEST.idligne.NumLigne)
-print(TJUMA2JUCAR.HeureDebut, TJUMA2JUCAR.Heurefin)
+print(TEST.idpairelieux)
+
