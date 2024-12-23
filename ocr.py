@@ -3,6 +3,7 @@ from PIL import Image
 import pandas as pd
 import tkinter as tk
 from tkinter import ttk
+from gestionDB import add_duo_lieux
 
 image = Image.open("Sans titre.png")
 text = pytesseract.image_to_string(image)
@@ -18,6 +19,8 @@ for i, index in enumerate(lines):
         lastline = i
         break
 
+for line in lines:
+    print(line.strip().split())
 if firstline == -1 or lastline == -1:
     raise ValueError("Impossible de trouver les sections 'Orig.' ou 'Total' dans les données.")
 
@@ -65,4 +68,12 @@ for _, row in df.iterrows():
 
 tableauhoraire.pack(fill="both", expand=True)
 
+#for line in lines[firstline + 1:lastline]:
+#    Start = (line.strip().split()[0])
+#    End = (line.strip().split()[1])
+#    Distance = (line.strip().split()[2])
+#    print(line.strip().split()[:3])
+#    add_duo_lieux(Start,End,Distance)
+
 root.mainloop()
+

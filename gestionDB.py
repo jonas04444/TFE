@@ -60,29 +60,3 @@ def add_duo_lieux(lieux_start, Lieux_end, Distance):
             if connect:
              connect.close()
 
-    def add_dbPL(self):
-        connect = None
-        try:
-            connect = sqlite3.connect("listelieux.db", timeout=10)
-            cursor = connect.cursor()
-            cursor.execute(
-                "SELECT COUNT(*) FROM PaireLieux WHERE LieuxDepart= ? AND LieuxArrivee=?",
-                (self.Start.nom_lieux, self.end.nom_lieux)
-            )
-            countPL = cursor.fetchone()[0]
-
-            if countPL > 0:
-                print(f"la paire de lieux existe déjà")
-            else:
-                cursor.execute(
-                    "INSERT INTO PaireLieux (LieuxDepart, LieuxArrivee, distance) VALUES (?, ?, ?)",
-                    (self.Start.nom_lieux, self.end.nom_lieux, self.distance))
-                connect.commit()
-                print("paire de lieux ajoutée")
-
-        except sqlite3.Error as e:
-            print("Erreur Pairelieux")
-        finally:
-            if connect:
-                connect.close()
-                print("Connexion fermée.")
