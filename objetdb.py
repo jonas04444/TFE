@@ -50,14 +50,20 @@ class PaireLieux:
             connect = sqlite3.connect("listelieux.db", timeout=10)
             cursor = connect.cursor()
             cursor.execute(
-                "INSERT INTO PaireLieux (LieuxDepart, LieuxArrivee, distance) VALUES (?, ?, ?)",
-                (self.Start.nom_lieux, self.end.nom_lieux, self.distance))
-            #récupérer la clés
-            idPairelieux = cursor.lastrowid
-            connect.commit()
-            print("paire de lieux ajoutée")
-            print(idPairelieux)
-            return idPairelieux
+                "SELECT COUNT(*) FROM PaireLieux WHERE LieuxDepart= ? AND LieuxArrivee=?",
+                (self.Start.nom_lieux, self.end.nom_lieux)
+            )
+            countPL = cursor.fetchone()[0]
+
+            if countPL > 0:
+                print(f"la paire de lieux existe déjà")
+            else:
+                cursor.execute(
+                    "INSERT INTO PaireLieux (LieuxDepart, LieuxArrivee, distance) VALUES (?, ?, ?)",
+                    (self.Start.nom_lieux, self.end.nom_lieux, self.distance))
+                connect.commit()
+                print("paire de lieux ajoutée")
+
         except sqlite3.Error as e:
             print("Erreur Pairelieux")
         finally:
@@ -139,7 +145,7 @@ AAAA= NomLieux("AAAAA", "test", "test")
 JUMA2JUCAR = PaireLieux(JUMA2,JUCAR,833)
 JUCARGOCAL = PaireLieux(JUCAR,GOCAL,979)
 
-#JUMA2JUCAR.add_db()
+JUMA2JUCAR.add_db()
 TEST = Composition(ligne41)
 #TEST.addpairelieux(JUCARGOCAL)
 
