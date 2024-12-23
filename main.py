@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import messagebox, ttk
 import sqlite3
-from gestionDB import add_lieux
+from gestionDB import add_lieux, add_duo_lieux
 from objetdb import NomLieux
 
 def graph_select():
@@ -80,7 +80,7 @@ def gestionLieux():
 
     IDLieux = tk.StringVar()
     name_entry = tk.Entry(win_gestionLIeux, textvariable=IDLieux)
-    name_entry.focus_set()
+    #name_entry.focus_set()
     name_entry.pack()
 
     login = tk.Label(win_gestionLIeux, text="Entrez la description du lieux")
@@ -88,7 +88,7 @@ def gestionLieux():
 
     Description = tk.StringVar()
     name_entry = tk.Entry(win_gestionLIeux, textvariable=Description)
-    name_entry.focus_set()
+    #name_entry.focus_set()
     name_entry.pack()
 
     login = tk.Label(win_gestionLIeux, text="Entrez le nom de la ville")
@@ -96,25 +96,36 @@ def gestionLieux():
 
     Ville = tk.StringVar()
     name_entry = tk.Entry(win_gestionLIeux, textvariable=Ville)
-    name_entry.focus_set()
+    #name_entry.focus_set()
     name_entry.pack()
 
     button_connect = tk.Button(win_gestionLIeux, text="création de Lieux", width=30, height=3,
                                command=lambda: add_lieux(IDLieux.get(), Description.get(), Ville.get()))
 
     button_connect.pack()
-
+    gestionPL = tk.Label(win_gestionLIeux, text="création paire de lieux")
+    gestionPL.pack()
     lieuxdebut_objets = NomLieux.item_db(NomLieux)
-    lieux_noms = [lieu.nom_lieux for lieu in lieuxdebut_objets]
+    lieux_nomsDebut = [lieu.nom_lieux for lieu in lieuxdebut_objets]
 
-    listelieux = ttk.Combobox(win_gestionLIeux, values=lieux_noms)
-    listelieux.pack()
+    listelieuxDebut = ttk.Combobox(win_gestionLIeux, values=lieux_nomsDebut)
+    listelieuxDebut.pack()
 
     lieuxfin_objets = NomLieux.item_db(NomLieux)
-    lieux_noms = [lieu.nom_lieux for lieu in lieuxfin_objets]
+    lieux_nomsFin = [lieu.nom_lieux for lieu in lieuxfin_objets]
 
-    listelieux = ttk.Combobox(win_gestionLIeux, values=lieux_noms)
-    listelieux.pack()
+    listelieuxFin = ttk.Combobox(win_gestionLIeux, values=lieux_nomsFin)
+    listelieuxFin.pack()
+
+    gestionPL = tk.Label(win_gestionLIeux, text="Ajoutez la distance entre ces lieux (en mètre)")
+    gestionPL.pack()
+    distancePL = tk.StringVar()
+    distance_entry = tk.Entry(win_gestionLIeux, textvariable=distancePL)
+    distance_entry.pack()
+
+    button_ajoutPL = tk.Button(win_gestionLIeux, text="création de la paire de lieux", width=30, height=3,
+                               command=lambda: add_duo_lieux(listelieuxDebut.get(), listelieuxFin.get(), int(distancePL.get())))
+    button_ajoutPL.pack()
 
 def visitor():
     win_visitor = tk.Toplevel(root)

@@ -36,12 +36,53 @@ def add_duo_lieux(lieux_start, Lieux_end, Distance):
     if not lieux_start or not Lieux_end or not Distance:
         messagebox.showerror("ERREUR", "Veuillez remplir tous les champs.")
     else:
-        #print(f"IDLieux: {lieux_start}, Description: {Lieux_end}, Ville: {Distance}")
-        connect = sqlite3.connect("PaireLieux.db")
-        quest = connect.cursor()
-        quest.execute("INSERT INTO PaireLieux ("
-                      "LieuxDepart, LieuxArrivee, "
-                      "distance) VALUES (?, ?, ?)",
-                      (lieux_start, Lieux_end,Distance))
-        connect.commit()
-        connect.close()
+        try:
+            connect = sqlite3.connect("listelieux.db")
+            cursor = connect.cursor()
+            cursor.execute(
+                "SELECT COUNT(*) FROM PaireLieux WHERE LieuxDepart= ? AND LieuxArrivee=?",
+                (lieux_start, Lieux_end)
+            )
+            countPL = cursor.fetchone()[0]
+
+            if countPL > 0:
+                messagebox.showerror("ERREUR", "La paire de lieux existe déjà.")
+            else:
+                cursor.execute(
+                    "INSERT INTO PaireLieux (LieuxDepart, LieuxArrivee, distance) VALUES (?, ?, ?)",
+                    (lieux_start, Lieux_end, Distance))
+                connect.commit()
+                messagebox.showerror("VALIT", "Paire de lieux ajoutée")
+        except sqlite3.Error:
+            print("Erreur Pairelieux")
+
+        finally:
+            if connect:
+             connect.close()
+
+    def add_dbPL(self):
+        connect = None
+        try:
+            connect = sqlite3.connect("listelieux.db", timeout=10)
+            cursor = connect.cursor()
+            cursor.execute(
+                "SELECT COUNT(*) FROM PaireLieux WHERE LieuxDepart= ? AND LieuxArrivee=?",
+                (self.Start.nom_lieux, self.end.nom_lieux)
+            )
+            countPL = cursor.fetchone()[0]
+
+            if countPL > 0:
+                print(f"la paire de lieux existe déjà")
+            else:
+                cursor.execute(
+                    "INSERT INTO PaireLieux (LieuxDepart, LieuxArrivee, distance) VALUES (?, ?, ?)",
+                    (self.Start.nom_lieux, self.end.nom_lieux, self.distance))
+                connect.commit()
+                print("paire de lieux ajoutée")
+
+        except sqlite3.Error as e:
+            print("Erreur Pairelieux")
+        finally:
+            if connect:
+                connect.close()
+                print("Connexion fermée.")

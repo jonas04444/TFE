@@ -44,7 +44,7 @@ class PaireLieux:
         self.end = LieuxArrivee
         self.distance = distance
 
-    def add_db(self):
+    def add_dbPL(self):
         connect = None
         try:
             connect = sqlite3.connect("listelieux.db", timeout=10)
@@ -134,23 +134,6 @@ class Composition:
 
     def addpairelieux(self, pairelieux):
         self.idpairelieux.append(pairelieux)
-
-ligne41 = Ligne(141,41,"aller")
-
-JUMA2 = NomLieux("JUMA2", "test","jumet")
-JUCAR = NomLieux("JUCAR", "test 2", "Jumet")
-GOCAL = NomLieux("GOCAL","calvaire","gosselies")
-AAAA= NomLieux("AAAAA", "test", "test")
-
-JUMA2JUCAR = PaireLieux(JUMA2,JUCAR,833)
-JUCARGOCAL = PaireLieux(JUCAR,GOCAL,979)
-
-JUMA2JUCAR.add_db()
-TEST = Composition(ligne41)
-#TEST.addpairelieux(JUCARGOCAL)
-
-TJUMA2JUCAR = TempsEntreLieux("0:00", "6:59", 2, "C0041", JUMA2JUCAR)
-TJUMA2JUCAR.add_dbtemp()
 
 
 
