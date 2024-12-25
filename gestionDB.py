@@ -1,4 +1,5 @@
 import sqlite3
+from itertools import count
 from tkinter import messagebox
 
 def new_table():
@@ -96,6 +97,33 @@ def add_temps_parcours(HStart,HEnd,Temps,VersionT,LieuxDepart, LieuxArrivee):
                 messagebox.showinfo("VALIDE", "Temps de parcrous entre lieux ajouté")
         except sqlite3.Error as error:
             print(f"Erreur temps entre lieux : {error}")
+        finally:
+            if connect:
+                connect.close()
+
+def Creer_ligne (Num_Ligne, Sens):
+    if not Num_Ligne or not Sens:
+        messagebox.showerror("ERREUR", "Veuilllez remplis tous les champs.")
+    else:
+        try:
+            connect = sqlite3.connect("listelieux.db")
+            cursor = connect.cursor()
+            cursor.execute(
+                "SELECT COUNT(*) FROM Ligne WHERE NumLigne = ? AND Sens = ?",
+                (Num_Ligne,Sens)
+            )
+            countLigne = cursor.fetchone()[0]
+
+            if countLigne > 0:
+                messagebox.showerror("ERREUR","cette ligne existe déjà")
+            else:
+                cursor.execute(
+                    "INSERT INTO Ligne (NumLigne , Sens) Values (?,?) ",
+                    (Num_Ligne,Sens))
+                connect.commit()
+                messagebox.showinfo("VALIDE","la ligne a bien été créée")
+        except sqlite3.Error as error:
+            print(f"Erreur ligne de bus : {error}")
         finally:
             if connect:
                 connect.close()

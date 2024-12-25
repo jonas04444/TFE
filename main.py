@@ -5,7 +5,7 @@ import sqlite3
 
 from uri_template import expand
 
-from gestionDB import add_lieux, add_duo_lieux, add_temps_parcours
+from gestionDB import add_lieux, add_duo_lieux, add_temps_parcours, Creer_ligne
 from objetdb import NomLieux
 
 def graph_select():
@@ -29,9 +29,17 @@ def graph_select():
     button_view_data = tk.Button(win, text="Voir des données")
     button_view_data.pack()
 
-    button_generate = tk.Button(win, text="gestion lieux", width=30, height=3,
+    button_generate = tk.Button(win, text="gestion des lieux", width=30, height=3,
                                command=lambda: gestionLieux())
     button_generate.pack()
+
+    button_ligne = tk.Button(win, text="gestion des lignes", width=30, height=3,
+                                command=lambda: Creation_ligne())
+    button_ligne.pack()
+
+    button_analyse = tk.Button(win, text="Analyse des données", width=30, height=3,
+                                command=lambda: Analyse_donnée())
+    button_analyse.pack()
 
     frame = tk.Frame(win)
     frame.pack(fill='both', expand=True)
@@ -76,8 +84,6 @@ def gestionLieux():
     win_gestionLIeux = tk.Toplevel(root)
     win_gestionLIeux.title("gestion des lieux")
     win_gestionLIeux.geometry("600x800")
-
-    win_gestionLIeux.title("gestion des lieux")
 
     GLieux = LabelFrame(win_gestionLIeux, text="gestion arrêts", padx=20, pady=2, height=200)
     GLieux.pack(fill="both", expand="yes")
@@ -190,6 +196,49 @@ def gestionLieux():
                                command=lambda: add_temps_parcours(HDebut.get(), HFin.get(),
                                                              int(TempsP.get()), VTempsP.get(), TlistelieuxDebut.get(),TlistelieuxFin.get()))
     button_ajoutTP.pack()
+
+def Creation_ligne():
+
+    win_ligne = tk.Toplevel(root)
+    win_ligne.title("création de ligne")
+    win_ligne.geometry("800x900")
+
+    GLigne = LabelFrame(win_ligne, text="gestion des temps de parcours", padx=20, pady=2, height=200)
+    GLigne.pack(fill="both", expand="yes")
+
+    Crealigne = tk.Label(GLigne, text="Création d'une ligne")
+    Crealigne.pack()
+
+    lignenumb = tk.Label(GLigne, text="entrez le numéro de la ligne")
+    lignenumb.pack()
+
+    NumLigne = tk.StringVar()
+    NumeroLigne = tk.Entry(GLigne, textvariable=NumLigne)
+    NumeroLigne.pack()
+
+    sensligne = tk.Label(GLigne, text="mettez le sens de la ligne")
+    sensligne.pack()
+
+    SensLigne = tk.StringVar()
+    Sens = tk.Entry(GLigne, textvariable=SensLigne)
+    Sens.pack()
+
+    button_ajoutligne = tk.Button(GLigne, text="création de la ligne", width=30, height=3,
+                               command=lambda: Creer_ligne(int(NumLigne.get()), int(SensLigne.get())))
+    button_ajoutligne.pack()
+
+    win_ligne.mainloop()
+
+def Analyse_donnée():
+
+    win_analyse = tk.Toplevel(root)
+    win_analyse.title("Analyse des données")
+    win_analyse.geometry("800x900")
+
+    label = tk.Label(win_analyse, text="ça commence ici")
+    label.pack()
+
+    win_analyse.mainloop()
 
 def visitor():
     win_visitor = tk.Toplevel(root)
