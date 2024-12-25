@@ -89,19 +89,4 @@ class Composition:
         return f"Composition: Ligne {self.idligne}, PaireLieux {self.idpairelieux}"
 
 
-# Exemple d'utilisation
-if __name__ == "__main__":
-    # Création d'objets NomLieux
-    JUMA2 = NomLieux("jumet Madeleine", "station métro", "Jumet")
-    JUCAR = NomLieux("jumet Carosse", "croisement métro", "Jumet")
 
-    # Création d'une paire de lieux
-    depart41 = PaireLieux(JUMA2, JUCAR, 833)
-
-    # Ajout dans la base de données
-    depart41.add_db()
-
-    # Affichage des objets
-    print(JUMA2)
-    print(JUCAR)
-    print(depart41)

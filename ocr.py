@@ -3,9 +3,13 @@ from PIL import Image
 import pandas as pd
 import tkinter as tk
 from tkinter import ttk
-from gestionDB import add_duo_lieux
+import cv2
+from pytesseract import image_to_string
 
-image = Image.open("Sans titre.png")
+from gestionDB import add_duo_lieux
+#qgrid pour éditer tableau
+image= cv2.imread("Sans titre.png")
+#image = Image.open("Sans titre.png")
 text = pytesseract.image_to_string(image)
 
 lines = text.strip().split("\n")

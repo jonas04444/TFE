@@ -52,7 +52,7 @@ def add_duo_lieux(lieux_start, Lieux_end, Distance):
                     "INSERT INTO PaireLieux (LieuxDepart, LieuxArrivee, distance) VALUES (?, ?, ?)",
                     (lieux_start, Lieux_end, Distance))
                 connect.commit()
-                messagebox.showerror("VALIT", "Paire de lieux ajoutée")
+                messagebox.showinfo("VALIDE", "Paire de lieux ajoutée")
         except sqlite3.Error:
             print("Erreur Pairelieux")
 
