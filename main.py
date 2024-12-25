@@ -1,6 +1,10 @@
 import tkinter as tk
-from tkinter import messagebox, ttk
+from cProfile import label
+from tkinter import messagebox, ttk, LabelFrame
 import sqlite3
+
+from uri_template import expand
+
 from gestionDB import add_lieux, add_duo_lieux
 from objetdb import NomLieux
 
@@ -75,57 +79,68 @@ def gestionLieux():
 
     win_gestionLIeux.title("gestion des lieux")
 
-    login = tk.Label(win_gestionLIeux, text="Entrez le nom d'un Lieux")
+    GLieux = LabelFrame(win_gestionLIeux, text="gestion arrêts", padx=20, pady=2, height=200)
+    GLieux.pack(fill="both", expand="yes")
+
+    login = tk.Label(GLieux, text="Entrez le nom d'un Lieux")
     login.pack()
 
     IDLieux = tk.StringVar()
-    name_entry = tk.Entry(win_gestionLIeux, textvariable=IDLieux)
+    name_entry = tk.Entry(GLieux, textvariable=IDLieux)
     #name_entry.focus_set()
     name_entry.pack()
 
-    login = tk.Label(win_gestionLIeux, text="Entrez la description du lieux")
+    login = tk.Label(GLieux, text="Entrez la description du lieux")
     login.pack()
 
     Description = tk.StringVar()
-    name_entry = tk.Entry(win_gestionLIeux, textvariable=Description)
+    name_entry = tk.Entry(GLieux, textvariable=Description)
     #name_entry.focus_set()
     name_entry.pack()
 
-    login = tk.Label(win_gestionLIeux, text="Entrez le nom de la ville")
+    login = tk.Label(GLieux, text="Entrez le nom de la ville")
     login.pack()
 
     Ville = tk.StringVar()
-    name_entry = tk.Entry(win_gestionLIeux, textvariable=Ville)
+    name_entry = tk.Entry(GLieux, textvariable=Ville)
     #name_entry.focus_set()
     name_entry.pack()
 
-    button_connect = tk.Button(win_gestionLIeux, text="création de Lieux", width=30, height=3,
+    button_connect = tk.Button(GLieux, text="création de Lieux", width=30, height=3,
                                command=lambda: add_lieux(IDLieux.get(), Description.get(), Ville.get()))
 
     button_connect.pack()
-    gestionPL = tk.Label(win_gestionLIeux, text="création paire de lieux")
+
+    GPLieux = LabelFrame(win_gestionLIeux, text="gestion les paires d'arrêts", padx=20, pady=2, height=200)
+    GPLieux.pack(fill="both", expand="yes")
+
+    gestionPL = tk.Label(GPLieux, text="création paire de lieux")
     gestionPL.pack()
     lieuxdebut_objets = NomLieux.item_db(NomLieux)
     lieux_nomsDebut = [lieu.nom_lieux for lieu in lieuxdebut_objets]
 
-    listelieuxDebut = ttk.Combobox(win_gestionLIeux, values=lieux_nomsDebut)
+    listelieuxDebut = ttk.Combobox(GPLieux, values=lieux_nomsDebut)
     listelieuxDebut.pack()
 
     lieuxfin_objets = NomLieux.item_db(NomLieux)
     lieux_nomsFin = [lieu.nom_lieux for lieu in lieuxfin_objets]
 
-    listelieuxFin = ttk.Combobox(win_gestionLIeux, values=lieux_nomsFin)
+    listelieuxFin = ttk.Combobox(GPLieux, values=lieux_nomsFin)
     listelieuxFin.pack()
 
-    gestionPL = tk.Label(win_gestionLIeux, text="Ajoutez la distance entre ces lieux (en mètre)")
+    gestionPL = tk.Label(GPLieux, text="Ajoutez la distance entre ces lieux (en mètre)")
     gestionPL.pack()
     distancePL = tk.StringVar()
-    distance_entry = tk.Entry(win_gestionLIeux, textvariable=distancePL)
+    distance_entry = tk.Entry(GPLieux, textvariable=distancePL)
     distance_entry.pack()
 
-    button_ajoutPL = tk.Button(win_gestionLIeux, text="création de la paire de lieux", width=30, height=3,
+    button_ajoutPL = tk.Button(GPLieux, text="création de la paire de lieux", width=30, height=3,
                                command=lambda: add_duo_lieux(listelieuxDebut.get(), listelieuxFin.get(), int(distancePL.get())))
     button_ajoutPL.pack()
+
+    GTempsParcours = LabelFrame(win_gestionLIeux, text="gestion des temps de parcours", padx=20, pady=2, height=200)
+    GTempsParcours.pack(fill="both", expand="yes")
+
 
 def visitor():
     win_visitor = tk.Toplevel(root)

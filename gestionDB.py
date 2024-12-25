@@ -60,3 +60,44 @@ def add_duo_lieux(lieux_start, Lieux_end, Distance):
             if connect:
              connect.close()
 
+def add_temps_parcours(HStart,HEnd,Temps,VersionT,LieuxDepart, LieuxArrivee):
+    if not HStart or not HEnd or not Temps or not VersionT or not LieuxDepart or not LieuxArrivee:
+        messagebox.showerror("ERREUR", "Veuillez remplir tous les champs.")
+    else:
+        try:
+            connect = sqlite3.connect("listelieux.db")
+            cursor = connect.cursor()
+            cursor.execute(
+                "SELECT idPaireLieux FROM PaireLieux WHERE LieuxDepart = ? AND LieuxArrivee = ?",
+                (LieuxDepart, LieuxArrivee)
+            )
+            result = cursor.fetchone()
+            print("test1")
+            if result:
+                idpairelieux = result[0]
+            else:
+                print("paire de lieux n'existe pas")
+                return
+            print(idpairelieux)
+            cursor.execute(
+                "SELECT COUNT(*) FROM TempsEntreLieux WHERE (HeureDebut = ? OR HeureFin = ?) AND VersionTemps = ? AND PaireLieux = ?",
+                (HStart,HEnd,VersionT, idpairelieux)
+            )
+            print("test2")
+            countVPL = cursor.fetchone()[0]
+
+            if countVPL > 0:
+                messagebox.showerror("ERREUR","il y a déjà une version de temps pour ce lieux")
+            else:
+                cursor.execute(
+                    "INSERT INTO TempsEntreLieux (HeureDebut, HeureFin, Temps, VersionTemps, PaireLieux) "
+                    "VALUES (?, ?, ?, ?, ?)", (HStart,HEnd,Temps,VersionT,idpairelieux))
+                connect.commit()
+                messagebox.showinfo("VALIDE", "Temps de parcrous entre lieux ajouté")
+        except sqlite3.Error as error:
+            print(f"Erreur temps entre lieux : {error}")
+        finally:
+            if connect:
+                connect.close()
+
+test = add_temps_parcours("0:00", "6:00", 2, "C0041", "JUMA2", "JUCAR")
