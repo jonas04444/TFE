@@ -72,18 +72,18 @@ def add_temps_parcours(HStart,HEnd,Temps,VersionT,LieuxDepart, LieuxArrivee):
                 (LieuxDepart, LieuxArrivee)
             )
             result = cursor.fetchone()
-            print("test1")
+            #print("test1")
             if result:
                 idpairelieux = result[0]
             else:
                 print("paire de lieux n'existe pas")
                 return
-            print(idpairelieux)
+            #print(idpairelieux)
             cursor.execute(
                 "SELECT COUNT(*) FROM TempsEntreLieux WHERE (HeureDebut = ? OR HeureFin = ?) AND VersionTemps = ? AND PaireLieux = ?",
                 (HStart,HEnd,VersionT, idpairelieux)
             )
-            print("test2")
+            #print("test2")
             countVPL = cursor.fetchone()[0]
 
             if countVPL > 0:
@@ -100,4 +100,4 @@ def add_temps_parcours(HStart,HEnd,Temps,VersionT,LieuxDepart, LieuxArrivee):
             if connect:
                 connect.close()
 
-test = add_temps_parcours("0:00", "6:00", 2, "C0041", "JUMA2", "JUCAR")
+#test = add_temps_parcours("0:00", "6:00", 2, "C0041", "JUMA2", "JUCAR")

@@ -5,7 +5,7 @@ import sqlite3
 
 from uri_template import expand
 
-from gestionDB import add_lieux, add_duo_lieux
+from gestionDB import add_lieux, add_duo_lieux, add_temps_parcours
 from objetdb import NomLieux
 
 def graph_select():
@@ -75,7 +75,7 @@ def confirm_user(nomuser, password):
 def gestionLieux():
     win_gestionLIeux = tk.Toplevel(root)
     win_gestionLIeux.title("gestion des lieux")
-    win_gestionLIeux.geometry("600x600")
+    win_gestionLIeux.geometry("600x800")
 
     win_gestionLIeux.title("gestion des lieux")
 
@@ -116,6 +116,7 @@ def gestionLieux():
 
     gestionPL = tk.Label(GPLieux, text="création paire de lieux")
     gestionPL.pack()
+
     lieuxdebut_objets = NomLieux.item_db(NomLieux)
     lieux_nomsDebut = [lieu.nom_lieux for lieu in lieuxdebut_objets]
 
@@ -141,6 +142,54 @@ def gestionLieux():
     GTempsParcours = LabelFrame(win_gestionLIeux, text="gestion des temps de parcours", padx=20, pady=2, height=200)
     GTempsParcours.pack(fill="both", expand="yes")
 
+    gestionTPL = tk.Label(GTempsParcours, text="choisissez un lieux de bébut et un lieux de fin")
+    gestionTPL.pack()
+
+    lieuxdebut_objets = NomLieux.item_db(NomLieux)
+    lieux_nomsDebut = [lieu.nom_lieux for lieu in lieuxdebut_objets]
+
+    TlistelieuxDebut = ttk.Combobox(GTempsParcours, values=lieux_nomsDebut)
+    TlistelieuxDebut.pack()
+
+    lieuxfin_objets = NomLieux.item_db(NomLieux)
+    lieux_nomsFin = [lieu.nom_lieux for lieu in lieuxfin_objets]
+
+    TlistelieuxFin = ttk.Combobox(GTempsParcours, values=lieux_nomsFin)
+    TlistelieuxFin.pack()
+
+    gestionTPL = tk.Label(GTempsParcours, text="choisissez un lieux de bébut et un lieux de fin")
+    gestionTPL.pack()
+
+    HDebut = tk.StringVar()
+    name_entry = tk.Entry(GTempsParcours, textvariable=HDebut)
+    name_entry.pack()
+
+    HFin = tk.StringVar()
+    name_entry = tk.Entry(GTempsParcours, textvariable=HFin)
+    name_entry.pack()
+
+    gestionTPL = tk.Label(GTempsParcours, text="choisissez un lieux de bébut et un lieux de fin au format XX:XX")
+    gestionTPL.pack()
+
+
+    gestionTPL = tk.Label(GTempsParcours, text="mettez le temps de parcours")
+    gestionTPL.pack()
+
+    TempsP = tk.StringVar()
+    name_entry = tk.Entry(GTempsParcours, textvariable=TempsP)
+    name_entry.pack()
+
+    gestionTPL = tk.Label(GTempsParcours, text="mettez la version de temps de parcours")
+    gestionTPL.pack()
+
+    VTempsP = tk.StringVar()
+    name_entry = tk.Entry(GTempsParcours, textvariable=VTempsP)
+    name_entry.pack()
+
+    button_ajoutTP = tk.Button(GTempsParcours, text="Ajout Temps de parcours", width=30, height=3,
+                               command=lambda: add_temps_parcours(HDebut.get(), HFin.get(),
+                                                             int(TempsP.get()), VTempsP.get(), TlistelieuxDebut.get(),TlistelieuxFin.get()))
+    button_ajoutTP.pack()
 
 def visitor():
     win_visitor = tk.Toplevel(root)
