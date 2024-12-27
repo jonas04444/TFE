@@ -81,7 +81,7 @@ def add_temps_parcours(HStart,HEnd,Temps,VersionT,LieuxDepart, LieuxArrivee):
                 return
             #print(idpairelieux)
             cursor.execute(
-                "SELECT COUNT(*) FROM TempsEntreLieux WHERE (HeureDebut = ? OR HeureFin = ?) AND VersionTemps = ? AND PaireLieux = ?",
+                "SELECT COUNT(*) FROM TempsEntreLieux2 WHERE (HeureDebut = ? OR HeureFin = ?) AND VersionTemps = ? AND PaireLieux = ?",
                 (HStart,HEnd,VersionT, idpairelieux)
             )
             #print("test2")
@@ -91,7 +91,7 @@ def add_temps_parcours(HStart,HEnd,Temps,VersionT,LieuxDepart, LieuxArrivee):
                 messagebox.showerror("ERREUR","il y a déjà une version de temps pour ce lieux")
             else:
                 cursor.execute(
-                    "INSERT INTO TempsEntreLieux (HeureDebut, HeureFin, Temps, VersionTemps, PaireLieux) "
+                    "INSERT INTO TempsEntreLieux2 (HeureDebut, HeureFin, Temps, VersionTemps, PaireLieux) "
                     "VALUES (?, ?, ?, ?, ?)", (HStart,HEnd,Temps,VersionT,idpairelieux))
                 connect.commit()
                 messagebox.showinfo("VALIDE", "Temps de parcrous entre lieux ajouté")

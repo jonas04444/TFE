@@ -113,7 +113,7 @@ class TempsEntreLieux:
                 return
 
             cursor.execute(
-                "INSERT INTO TempsEntreLieux (HeureDebut, Heurefin, temps, versiontemps, pairelieux) "
+                "INSERT INTO TempsEntreLieux2 (HeureDebut, Heurefin, temps, versiontemps, pairelieux) "
                 "VALUES (?, ?, ?, ?, ?)",
                 (self.HeureDebut, self.Heurefin, self.temps, self.versiontemps, idpairelieux)
             )

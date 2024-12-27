@@ -263,7 +263,7 @@ def Creation_ligne():
                                   command=lambda: Composition_ligne(int(CompostionL.get()), int(CompostionS.get()) ,listelieuxDebut.get(), listelieuxFin.get()))
     button_ajoutPLaLigne.pack()
 
-    win_ligne.mainloop()
+    #AjoutPL.mainloop()
 
 def Analyse_donnée():
 
@@ -274,7 +274,7 @@ def Analyse_donnée():
     label = tk.Label(win_analyse, text="ça commence ici")
     label.pack()
 
-    win_analyse.mainloop()
+    #win_analyse.mainloop()
 
 def visitor():
     win_visitor = tk.Toplevel(root)

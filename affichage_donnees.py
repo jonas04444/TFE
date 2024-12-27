@@ -6,7 +6,35 @@ def afficher_donnees():
     try:
         connect = sqlite3.connect("listelieux.db")
         cursor = connect.cursor()
-        cursor.execute("SELECT * FROM PaireLieux")
+
+        requeteSQL = """
+        SELECT 
+            pl.LieuxDepart AS "Arrêt d'origine",
+            pl.LieuxArrivee AS "Arrêt de fin",
+            pl.Distance AS "Distance",
+            MAX(CASE WHEN te.HeureDebut = '0:00' THEN te.Temps ELSE NULL END) AS "0:00",
+            MAX(CASE WHEN te.HeureDebut = '7:00' THEN te.Temps ELSE NULL END) AS "7:00",
+            MAX(CASE WHEN te.HeureDebut = '9:00' THEN te.Temps ELSE NULL END) AS "9:00",
+            MAX(CASE WHEN te.HeureDebut = '15:30' THEN te.Temps ELSE NULL END) AS "15:30",
+            MAX(CASE WHEN te.HeureDebut = '17:30' THEN te.Temps ELSE NULL END) AS "17:30"
+        FROM 
+            TempsEntreLieux2 te
+        JOIN 
+            PaireLieux pl ON te.PaireLieux = pl.IDPaireLieux
+        JOIN 
+            Composition c ON pl.IDPaireLieux = c.IdPaireLieux
+        JOIN 
+            Ligne l ON c.IDLigne = l.IDLigne
+        WHERE 
+            l.NumLigne = 41 -- Filtrer la ligne 41
+            AND l.Sens = 2 -- Filtrer le sens 2
+        GROUP BY 
+            pl.LieuxDepart, pl.LieuxArrivee, pl.Distance
+        ORDER BY 
+            pl.LieuxDepart, pl.LieuxArrivee;
+        """
+
+        cursor.execute(requeteSQL)
         datas = cursor.fetchall()
 
         for data in datas:
@@ -45,5 +73,5 @@ for col in columns:
     tableau.column(col, width=150, anchor="center")
 
 tableau.pack()
-
+afficher_donnees()
 AnalyseDonnes.mainloop()
