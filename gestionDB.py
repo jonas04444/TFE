@@ -182,4 +182,4 @@ def Composition_ligne(Num_Ligne, Sens, LieuxDepart, LieuxArrivee):
             if connect:
              connect.close()
 
-testajout = Composition_ligne(42, 2,  "JUMA2", "JUCAR")
+#testajout = Composition_ligne(41, 2,  "JUMA2", "JUCAR")

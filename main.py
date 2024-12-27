@@ -5,7 +5,7 @@ import sqlite3
 
 from uri_template import expand
 
-from gestionDB import add_lieux, add_duo_lieux, add_temps_parcours, Creer_ligne
+from gestionDB import add_lieux, add_duo_lieux, add_temps_parcours, Creer_ligne, Composition_ligne
 from objetdb import NomLieux
 
 def graph_select():
@@ -226,6 +226,42 @@ def Creation_ligne():
     button_ajoutligne = tk.Button(GLigne, text="création de la ligne", width=30, height=3,
                                command=lambda: Creer_ligne(int(NumLigne.get()), int(SensLigne.get())))
     button_ajoutligne.pack()
+
+    AjoutPL = LabelFrame(win_ligne, text="gestion les paires d'arrêts", padx=20, pady=2, height=200)
+    AjoutPL.pack(fill="both", expand="yes")
+
+    CompLigne = tk.Label(AjoutPL, text="entrez le numéro de la ligne")
+    CompLigne.pack()
+
+    CompostionL = tk.StringVar()
+    NumeroLigne = tk.Entry(AjoutPL, textvariable=CompostionL)
+    NumeroLigne.pack()
+
+    ComSens = tk.Label(AjoutPL, text="mettez le sens de la ligne")
+    ComSens.pack()
+
+    CompostionS = tk.StringVar()
+    Sens = tk.Entry(AjoutPL, textvariable=CompostionS)
+    Sens.pack()
+
+    gestionPL = tk.Label(AjoutPL, text="création paire de lieux")
+    gestionPL.pack()
+
+    lieuxdebut_objets = NomLieux.item_db(NomLieux)
+    lieux_nomsDebut = [lieu.nom_lieux for lieu in lieuxdebut_objets]
+
+    listelieuxDebut = ttk.Combobox(AjoutPL, values=lieux_nomsDebut)
+    listelieuxDebut.pack()
+
+    lieuxfin_objets = NomLieux.item_db(NomLieux)
+    lieux_nomsFin = [lieu.nom_lieux for lieu in lieuxfin_objets]
+
+    listelieuxFin = ttk.Combobox(AjoutPL, values=lieux_nomsFin)
+    listelieuxFin.pack()
+
+    button_ajoutPLaLigne = tk.Button(AjoutPL, text="ajout paire de lieux à une ligne", width=30, height=3,
+                                  command=lambda: Composition_ligne(int(CompostionL.get()), int(CompostionS.get()) ,listelieuxDebut.get(), listelieuxFin.get()))
+    button_ajoutPLaLigne.pack()
 
     win_ligne.mainloop()
 
