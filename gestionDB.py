@@ -128,4 +128,58 @@ def Creer_ligne (Num_Ligne, Sens):
             if connect:
                 connect.close()
 
-#test = add_temps_parcours("0:00", "6:00", 2, "C0041", "JUMA2", "JUCAR")
+def Composition_ligne(Num_Ligne, Sens, LieuxDepart, LieuxArrivee):
+    if not Num_Ligne or not Sens or not LieuxDepart or not LieuxArrivee:
+        messagebox.showerror("ERREUR", "Veuilllez remplis tous les champs.")
+    else:
+        try:
+            connect = sqlite3.connect("listelieux.db")
+            cursor = connect.cursor()
+
+            cursor.execute(
+                "SELECT IDligne FROM Ligne WHERE NumLigne = ? AND Sens = ?",
+                (Num_Ligne, Sens)
+            )
+            result = cursor.fetchone()
+            # print("test1")
+            if result:
+                IDligne = result[0]
+            else:
+                print("la ligne n'existe pas")
+                return
+
+            cursor.execute(
+                "SELECT idPaireLieux FROM PaireLieux WHERE LieuxDepart = ? AND LieuxArrivee = ?",
+                (LieuxDepart, LieuxArrivee)
+            )
+            result = cursor.fetchone()
+            # print("test1")
+            if result:
+                PaireLieux = result[0]
+            else:
+                print("paire de lieux n'existe pas")
+                return
+            print(PaireLieux)
+            cursor.execute(
+                "SELECT COUNT(*) FROM composition WHERE IdLigne = ? AND IdPaireLieux = ?",
+                (Num_Ligne, PaireLieux)
+            )
+            countLigne = cursor.fetchone()[0]
+
+            if countLigne > 0:
+                messagebox.showerror("ERREUR", "ajout impossible")
+            else:
+                cursor.execute(
+                    "INSERT INTO composition (IdLigne, IdPaireLieux) VALUES (?, ?)",
+                    (IDligne, PaireLieux))
+                connect.commit()
+                messagebox.showinfo("VALIDE", "Paire de lieux ajoutée")
+
+        except sqlite3.Error as Error:
+            print(f"Erreur Pairelieux {Error}")
+
+        finally:
+            if connect:
+             connect.close()
+
+testajout = Composition_ligne(42, 2,  "JUMA2", "JUCAR")
