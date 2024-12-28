@@ -2,9 +2,11 @@ import tkinter as tk
 from cProfile import label
 from tkinter import messagebox, ttk, LabelFrame
 import sqlite3
+from affichage_donnees import affichage_DB
 
 from uri_template import expand
 
+from affichage_donnees import afficher_donnees
 from gestionDB import add_lieux, add_duo_lieux, add_temps_parcours, Creer_ligne, Composition_ligne
 from objetdb import NomLieux
 
@@ -22,13 +24,6 @@ def graph_select():
     login_graph_select = tk.Label(win, textvariable=login_name)
     login_graph_select.pack()
 
-    button_generate = tk.Button(win, text="Générer tableau comparatif")
-    button_generate.pack()
-    button_add_date = tk.Button(win, text="Ajouter ou modifier des données")
-    button_add_date.pack()
-    button_view_data = tk.Button(win, text="Voir des données")
-    button_view_data.pack()
-
     button_generate = tk.Button(win, text="gestion des lieux", width=30, height=3,
                                command=lambda: gestionLieux())
     button_generate.pack()
@@ -38,7 +33,7 @@ def graph_select():
     button_ligne.pack()
 
     button_analyse = tk.Button(win, text="Analyse des données", width=30, height=3,
-                                command=lambda: Analyse_donnée())
+                                command=lambda: affichage_DB())
     button_analyse.pack()
 
     frame = tk.Frame(win)
