@@ -2,7 +2,7 @@ import sqlite3
 import tkinter as tk
 from tkinter import ttk, messagebox, simpledialog
 
-columns = ["Arret d'origine", "Arret de fin", "Distance", "0:00", "7:00", "9:00", "15:30", "17:30", "ID"]
+columns = ["Arret d'origine", "Arret de fin", "Distance", "0:00", "7:00", "9:00", "15:30", "17:30"]
 
 def afficher_donnees(version, numero_ligne, sens):
     try:
@@ -126,7 +126,7 @@ def creer_nouvelle_version(version_source, nouvelle_version):
         if connect:
             connect.close()
 
-def affichage_DB():
+def affichage_DB(graphiqueur):
     global tableau, entry_version
     AnalyseDonnes = tk.Tk()
     AnalyseDonnes.title("Gestion des données")
@@ -136,8 +136,8 @@ def affichage_DB():
     for col in columns:
         tableau.heading(col, text=col)
         tableau.column(col, width=150, anchor="center")
-
-    tableau.bind("<Double-1>", update_cellule)
+    if graphiqueur:
+        tableau.bind("<Double-1>", update_cellule)
 
     tableau.pack(fill="both", expand=True)
 
@@ -158,16 +158,16 @@ def affichage_DB():
     label_sens.grid(row=0, column=4, padx=5)
     entry_sens = tk.Entry(frame, width=10)
     entry_sens.grid(row=0, column=5, padx=5)
+    if graphiqueur:
+        label_version_source = tk.Label(frame, text="Version source :")
+        label_version_source.grid(row=1, column=0, padx=5)
+        entry_version_source = tk.Entry(frame, width=10)
+        entry_version_source.grid(row=1, column=1, padx=5)
 
-    label_version_source = tk.Label(frame, text="Version source :")
-    label_version_source.grid(row=1, column=0, padx=5)
-    entry_version_source = tk.Entry(frame, width=10)
-    entry_version_source.grid(row=1, column=1, padx=5)
-
-    label_nouvelle_version = tk.Label(frame, text="Nouvelle version :")
-    label_nouvelle_version.grid(row=1, column=2, padx=5)
-    entry_nouvelle_version = tk.Entry(frame, width=10)
-    entry_nouvelle_version.grid(row=1, column=3, padx=5)
+        label_nouvelle_version = tk.Label(frame, text="Nouvelle version :")
+        label_nouvelle_version.grid(row=1, column=2, padx=5)
+        entry_nouvelle_version = tk.Entry(frame, width=10)
+        entry_nouvelle_version.grid(row=1, column=3, padx=5)
 
     def on_afficher():
         version = entry_version.get()
@@ -181,16 +181,17 @@ def affichage_DB():
     btn_afficher = tk.Button(frame, text="Afficher", command=on_afficher)
     btn_afficher.grid(row=0, column=6, padx=10)
 
-    def on_creer_version():
-        version_source = entry_version_source.get()
-        nouvelle_version = entry_nouvelle_version.get()
-        if not version_source or not nouvelle_version:
-            messagebox.showwarning("Champs manquants", "Veuillez remplir les champs pour copier une version.")
-            return
-        creer_nouvelle_version(version_source, nouvelle_version)
+    if graphiqueur:
+        def on_creer_version():
+            version_source = entry_version_source.get()
+            nouvelle_version = entry_nouvelle_version.get()
+            if not version_source or not nouvelle_version:
+                messagebox.showwarning("Champs manquants", "Veuillez remplir les champs pour copier une version.")
+                return
+            creer_nouvelle_version(version_source, nouvelle_version)
 
-    btn_creer_version = tk.Button(frame, text="Créer une nouvelle version", command=on_creer_version)
-    btn_creer_version.grid(row=1, column=6, padx=10)
+        btn_creer_version = tk.Button(frame, text="Créer une nouvelle version", command=on_creer_version)
+        btn_creer_version.grid(row=1, column=6, padx=10)
 
     AnalyseDonnes.mainloop()
 

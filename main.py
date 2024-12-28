@@ -1,16 +1,14 @@
 import tkinter as tk
-from cProfile import label
+from math import trunc
 from tkinter import messagebox, ttk, LabelFrame
 import sqlite3
 from affichage_donnees import affichage_DB
-
-from uri_template import expand
-
-from affichage_donnees import afficher_donnees
 from gestionDB import add_lieux, add_duo_lieux, add_temps_parcours, Creer_ligne, Composition_ligne
 from objetdb import NomLieux
 
-def graph_select():
+def graph_select(graphiqueur):
+    graphiqueur = True
+
     ConDB = sqlite3.connect("listelieux.db")
     cursor = ConDB.cursor()
 
@@ -33,7 +31,7 @@ def graph_select():
     button_ligne.pack()
 
     button_analyse = tk.Button(win, text="Analyse des données", width=30, height=3,
-                                command=lambda: affichage_DB())
+                                command=lambda: affichage_DB(graphiqueur))
     button_analyse.pack()
 
     frame = tk.Frame(win)
@@ -70,7 +68,7 @@ def confirm_user(nomuser, password):
         connect.close()
 
     if utilisateur:
-        graph_select()
+        graph_select(graphiqueur)
         #print("Utilisateur:", utilisateur)
     else:
         messagebox.showerror("ERREUR", "Nom d'utilisateur ou mot de passe incorrect")
@@ -271,13 +269,15 @@ def Analyse_donnée():
 
     #win_analyse.mainloop()
 
-def visitor():
+def visitor(graphiqueur):
     win_visitor = tk.Toplevel(root)
     win_visitor.title("Voir des données")
 
 root = tk.Tk()
 root.title("Analyse temps de parcours")
 root.geometry("600x600")
+
+graphiqueur = None
 
 title = tk.Label(root, text="Analyse de temps de parcours", font=("Arial", 25))
 title.pack()
@@ -300,7 +300,7 @@ password_entry.pack()
 button_connect = tk.Button(root, text="Connexion", width=30, height=3, command=lambda: confirm_user(login_name.get(), password_log.get()))
 button_connect.pack()
 
-button_visitor = tk.Button(root, text="Se connecter en tant que visiteur", width=30, height=3, command=visitor)
+button_visitor = tk.Button(root, text="Se connecter en tant que visiteur", width=30, height=3, command=lambda :affichage_DB(graphiqueur))
 button_visitor.pack()
 
 root.mainloop()
