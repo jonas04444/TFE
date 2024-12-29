@@ -85,7 +85,7 @@ def graph_select(graphiqueur):
                                                                               entry_versionpropo.get(),
                                                                               entry_ligne.get(),
                                                                               entry_sens.get(),
-                                                                              "comparaison_lignes3.xlsx"))
+                                                                              "comparaison_lignes.xlsx"))
 
     button_fichier_excel.pack()
 
