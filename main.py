@@ -5,6 +5,7 @@ import sqlite3
 from affichage_donnees import affichage_DB
 from gestionDB import add_lieux, add_duo_lieux, add_temps_parcours, Creer_ligne, Composition_ligne
 from objetdb import NomLieux
+from genere_tableau import export_comparaison_excel
 
 def graph_select(graphiqueur):
     graphiqueur = True
@@ -34,24 +35,59 @@ def graph_select(graphiqueur):
                                 command=lambda: affichage_DB(graphiqueur))
     button_analyse.pack()
 
-    frame = tk.Frame(win)
-    frame.pack(fill='both', expand=True)
+    #frame = tk.Frame(win)
+    #frame.pack(fill='both', expand=True)
 
-    tree = ttk.Treeview(frame, columns=(1, 2, 3), show="headings", height=8)
-    tree.pack(side='left', fill='both', expand=True)
+    #tree = ttk.Treeview(frame, columns=(1, 2, 3), show="headings", height=8)
+    #tree.pack(side='left', fill='both', expand=True)
 
-    tree.heading(1, text="NomLieux")
-    tree.heading(2, text="Description")
-    tree.heading(3, text="Ville")
+    #tree.heading(1, text="NomLieux")
+    #tree.heading(2, text="Description")
+    #tree.heading(3, text="Ville")
 
-    for row in rows:
-        tree.insert('', 'end', values=row)
+    #for row in rows:
+        #tree.insert('', 'end', values=row)
 
-    scrollbar = ttk.Scrollbar(frame, orient="vertical", command=tree.yview)
-    scrollbar.pack(side='right', fill='y')
+    #scrollbar = ttk.Scrollbar(frame, orient="vertical", command=tree.yview)
+    #scrollbar.pack(side='right', fill='y')
 
-    tree.configure(yscroll=scrollbar.set)
 
+    frame = tk.Frame(win, pady=10)
+    frame.pack()
+
+    label_versionactu = tk.Label(frame, text="Version actuelle :")
+    label_versionactu.grid(row=0, column=0, padx=5)
+    entry_versionactu = tk.Entry(frame, width=10)
+    entry_versionactu.grid(row=0, column=1, padx=5)
+
+    label_versionpropo = tk.Label(frame, text="Version proposition :")
+    label_versionpropo.grid(row=0, column=2, padx=5)
+    entry_versionpropo = tk.Entry(frame, width=10)
+    entry_versionpropo.grid(row=0, column=3, padx=5)
+
+    label_ligne = tk.Label(frame, text="Ligne :")
+    label_ligne.grid(row=1, column=0, padx=5)
+    entry_ligne = tk.Entry(frame, width=10)
+    entry_ligne.grid(row=1, column=1, padx=5)
+
+    label_sens = tk.Label(frame, text="Sens :")
+    label_sens.grid(row=1, column=2, padx=5)
+    entry_sens = tk.Entry(frame, width=10)
+    entry_sens.grid(row=1, column=3, padx=5)
+
+    versionactuel = entry_versionactu.get()
+    versionpropo = entry_versionpropo.get()
+    ligne = entry_ligne.get()
+    sens = entry_sens.get()
+
+    button_fichier_excel = tk.Button(win, text="générer fichier comparatif", width=30, height=3,
+                                     command=lambda: export_comparaison_excel(entry_versionactu.get(),
+                                                                              entry_versionpropo.get(),
+                                                                              entry_ligne.get(),
+                                                                              entry_sens.get(),
+                                                                              "comparaison_lignes3.xlsx"))
+
+    button_fichier_excel.pack()
 
     ConDB.close()
 

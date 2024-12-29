@@ -140,4 +140,4 @@ def export_comparaison_excel(version_actuelle, version_proposition, ligne, sens,
         if connect:
             connect.close()
 
-export_comparaison_excel("202412", "202501", 41, 2, "comparaison_lignes.xlsx")
+#export_comparaison_excel("202412", "202501", 41, 2, "comparaison_lignes.xlsx")

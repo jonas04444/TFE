@@ -199,4 +199,4 @@ def affichage_DB(graphiqueur):
 
     AnalyseDonnes.mainloop()
 
-affichage_DB(True)
+#affichage_DB(True)
