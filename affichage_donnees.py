@@ -1,6 +1,7 @@
 import sqlite3
 import tkinter as tk
 from tkinter import ttk, messagebox, simpledialog
+#from genere_tableau import export_tableau
 
 columns = ["Arret d'origine", "Arret de fin", "Distance", "0:00", "7:00", "9:00", "15:30", "17:30"]
 
@@ -18,8 +19,7 @@ def afficher_donnees(version, numero_ligne, sens):
             COALESCE(tl7.Temps, '') AS "7:00", 
             COALESCE(tl9.Temps, '') AS "9:00", 
             COALESCE(tl15.Temps, '') AS "15:30", 
-            COALESCE(tl17.Temps, '') AS "17:30",
-            pl.IDPaireLieux AS "ID"
+            COALESCE(tl17.Temps, '') AS "17:30"
         FROM PaireLieux AS pl
         LEFT JOIN TempsEntreLieux2 AS tl0 ON pl.IDPaireLieux = tl0.PaireLieux AND tl0.HeureDebut = '0:00' AND tl0.VersionTemps = ?
         LEFT JOIN TempsEntreLieux2 AS tl7 ON pl.IDPaireLieux = tl7.PaireLieux AND tl7.HeureDebut = '7:00' AND tl7.VersionTemps = ?
@@ -33,6 +33,7 @@ def afficher_donnees(version, numero_ligne, sens):
             WHERE l.NumLigne = ? AND l.Sens = ?
         )
         ORDER BY pl.IDPaireLieux;
+
         """
 
         cursor.execute(requeteSQL, (version, version, version, version, version, numero_ligne, sens))
@@ -193,6 +194,9 @@ def affichage_DB(graphiqueur):
         btn_creer_version = tk.Button(frame, text="Créer une nouvelle version", command=on_creer_version)
         btn_creer_version.grid(row=1, column=6, padx=10)
 
+    btn_export = tk.Button(frame, text="Exporter vers Excel", command=lambda: export_tableau(tableau, columns))
+    btn_export.grid(row=0, column=7, padx=10)
+
     AnalyseDonnes.mainloop()
 
-#affichage_DB()
+affichage_DB(True)
