@@ -58,10 +58,12 @@ def update_cellule(event):
     item = tableau.item(cellule_select)
     valeurs = item["values"]
 
+    # Identifier la colonne sélectionnée
     colonne = tableau.identify_column(event.x)
     colonne_index = int(colonne.replace("#", "")) - 1
-    colonne_nom = columns[colonne_index]  # Utilisation de la variable globale columns
+    colonne_nom = columns[colonne_index]  # Utilisation des colonnes définies
 
+    # Empêcher la modification des colonnes non éditables
     if colonne_nom in ["Arret d'origine", "Arret de fin", "Distance"]:
         messagebox.showinfo("Modification impossible", "Vous ne pouvez pas modifier cette colonne.")
         return
@@ -76,10 +78,28 @@ def update_cellule(event):
         connect = sqlite3.connect("listelieux.db")
         cursor = connect.cursor()
 
+        # Récupération des données nécessaires pour identifier la paire de lieux
+        lieu_depart = valeurs[0]  # Colonne "Arret d'origine"
+        lieu_arrivee = valeurs[1]  # Colonne "Arret de fin"
         heure_debut = colonne_nom
-        id_paire_lieux = valeurs[-1]
         version = entry_version.get()
 
+        # Vérifier l'existence de la paire de lieux et son identifiant unique
+        requete_verification = """
+        SELECT IDPaireLieux
+        FROM PaireLieux
+        WHERE LieuxDepart = ? AND LieuxArrivee = ?
+        """
+        cursor.execute(requete_verification, (lieu_depart, lieu_arrivee))
+        result = cursor.fetchone()
+
+        if not result:
+            messagebox.showerror("Erreur", "La paire de lieux spécifiée n'existe pas.")
+            return
+
+        id_paire_lieux = result[0]
+
+        # Mettre à jour le temps dans la base de données
         requete_update = """
         UPDATE TempsEntreLieux2
         SET Temps = ?
@@ -88,13 +108,35 @@ def update_cellule(event):
         cursor.execute(requete_update, (nouvelle_valeur, id_paire_lieux, heure_debut, version))
         connect.commit()
 
-        valeurs[colonne_index] = nouvelle_valeur
-        tableau.item(cellule_select, values=valeurs)
+        if cursor.rowcount > 0:  # Vérifie si une ligne a été modifiée
+            # Mettre à jour la valeur dans le tableau
+            valeurs[colonne_index] = nouvelle_valeur
+            tableau.item(cellule_select, values=valeurs)
+            messagebox.showinfo("Succès", "Valeur mise à jour avec succès.")
+        else:
+            messagebox.showwarning("Avertissement", "Aucune modification n'a été effectuée.")
 
-        messagebox.showinfo("Succès", "Valeur mise à jour avec succès.")
+        # Vérifier les autres lignes qui utilisent cette paire de lieux
+        requete_verification_lignes = """
+        SELECT l.NumLigne, l.Sens
+        FROM composition AS c
+        JOIN Ligne AS l ON c.IdLigne = l.IDLigne
+        WHERE c.IdPaireLieux = ?
+        """
+        cursor.execute(requete_verification_lignes, (id_paire_lieux,))
+        lignes_associees = cursor.fetchall()
+
+        if lignes_associees:
+            lignes_message = "\n".join([f"Ligne {ligne[0]} (Sens {ligne[1]})" for ligne in lignes_associees])
+            messagebox.showinfo(
+                "Lignes associées",
+                f"La paire de lieux modifiée est également utilisée par les lignes suivantes :\n{lignes_message}"
+            )
+        else:
+            messagebox.showinfo("Aucune ligne associée", "Cette paire de lieux n'est utilisée par aucune autre ligne.")
 
     except sqlite3.Error as e:
-        messagebox.showerror("Erreur SQL", f"Une erreur est survenue lors de la mise à jour : {e}")
+        messagebox.showerror("Erreur SQL", f"Une erreur est survenue lors de la mise à jour : {e}")
 
     finally:
         if connect:
@@ -194,8 +236,8 @@ def affichage_DB(graphiqueur):
         btn_creer_version = tk.Button(frame, text="Créer une nouvelle version", command=on_creer_version)
         btn_creer_version.grid(row=1, column=6, padx=10)
 
-    btn_export = tk.Button(frame, text="Exporter vers Excel", command=lambda: export_tableau(tableau, columns))
-    btn_export.grid(row=0, column=7, padx=10)
+    #btn_export = tk.Button(frame, text="Exporter vers Excel", command=lambda: export_tableau(tableau, columns))
+    #btn_export.grid(row=0, column=7, padx=10)
 
     AnalyseDonnes.mainloop()
 
