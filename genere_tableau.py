@@ -110,13 +110,22 @@ def export_comparaison_excel(version_actuelle, version_proposition, ligne, sens,
                             correspondant.value, (int, float)):
                         if float(cell.value) < float(correspondant.value):
                             cell.fill = red_fill
+                            if cell.row + 1 <= ws.max_row:
+                                cell_below = ws.cell(row=cell.row + 1, column=cell.column)
+                                cell_below.fill = red_fill
                         elif float(cell.value) > float(correspondant.value):
                             cell.fill = green_fill
+                            if cell.row + 1 <= ws.max_row:
+                                cell_below = ws.cell(row=cell.row + 1, column=cell.column)
+                                cell_below.fill = green_fill
                         else:
                             cell.fill = white_fill
             elif type_cell.value == "Temps Actuel":
                 for cell in row[5:]:
                     cell.fill = grey_fill
+                    if cell.row + 1 <= ws.max_row:
+                        cell_below = ws.cell(row=cell.row + 1, column=cell.column)
+                        cell_below.fill = grey_fill
 
         for col in ws.columns:
             max_length = 0

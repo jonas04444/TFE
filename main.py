@@ -230,7 +230,7 @@ def Creation_ligne():
 
     win_ligne = tk.Toplevel(root)
     win_ligne.title("création de ligne")
-    win_ligne.geometry("800x900")
+    win_ligne.geometry("300x400")
 
     GLigne = LabelFrame(win_ligne, text="gestion des temps de parcours", padx=20, pady=2, height=200)
     GLigne.pack(fill="both", expand="yes")
