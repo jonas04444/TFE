@@ -1,8 +1,13 @@
 import sqlite3
+from idlelib.configdialog import font_sample_text
+
 import pandas as pd
-from openpyxl.styles import PatternFill, Border, Side
+from openpyxl.styles import PatternFill, Border, Side, Font
 from openpyxl.utils.dataframe import dataframe_to_rows
 from openpyxl import Workbook
+
+#from ocr import total_row
+
 
 def export_comparaison_excel(version_actuelle, version_proposition, ligne, sens, fichier_sortie):
     try:
@@ -138,6 +143,45 @@ def export_comparaison_excel(version_actuelle, version_proposition, ligne, sens,
                     pass
             ws.column_dimensions[col_letter].width = max_length + 2
 
+        derniere_ligne = len(tableau)+1
+        total_row = derniere_ligne +1
+
+        ws.cell(row=total_row, column=3, value="Total actuelle").font = Font (bold=True)
+        #total = 0
+        for col_idx in range(4, ws.max_column +1):
+            total = 0
+            for row_idx in range (2, derniere_ligne+1,4):
+                cell = ws.cell(row=row_idx, column=col_idx)
+                value = cell.value
+                try:
+                    value = float(value)
+                    total += value
+                except (ValueError, TypeError):
+                    pass
+                #if isinstance(cell.value, (int, float)):
+                #total += cell.value
+            ws.cell(row=total_row, column=col_idx, value=total).font=Font(bold=True)
+
+        derniere_ligne2 = len(tableau) + 2
+        total_row2 = derniere_ligne2 + 1
+
+        ws.cell(row=total_row2, column=3, value="Total proposition").font = Font(bold=True)
+        # total = 0
+        for col_idx in range(6, ws.max_column + 1):
+            totalprop = 0
+            for row_idx in range(4, derniere_ligne + 1, 4):
+                cell = ws.cell(row=row_idx, column=col_idx)
+                value = cell.value
+                try:
+                    value = float(value)
+                    totalprop += value
+                except (ValueError, TypeError):
+                    pass
+                # if isinstance(cell.value, (int, float)):
+                # total += cell.value
+            ws.cell(row=total_row+1, column=col_idx, value=totalprop).font = Font(bold=True)
+
+        print(total)
         wb.save(fichier_sortie)
         print(f"Fichier exporté avec succès : {fichier_sortie}")
 
@@ -149,4 +193,4 @@ def export_comparaison_excel(version_actuelle, version_proposition, ligne, sens,
         if connect:
             connect.close()
 
-#export_comparaison_excel("202412", "202501", 41, 2, "comparaison_lignes.xlsx")
+export_comparaison_excel("202412", "202501", 41, 2, "comparaison_lignes.xlsx")
