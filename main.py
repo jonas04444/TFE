@@ -6,6 +6,7 @@ from affichage_donnees import affichage_DB
 from gestionDB import add_lieux, add_duo_lieux, add_temps_parcours, Creer_ligne, Composition_ligne
 from objetdb import NomLieux
 from genere_tableau import export_comparaison_excel
+from ocr import OCR
 
 def graph_select(graphiqueur):
     graphiqueur = True
@@ -88,6 +89,10 @@ def graph_select(graphiqueur):
                                                                               "comparaison_lignes.xlsx"))
 
     button_fichier_excel.pack()
+
+    button_ocr = tk.Button(win, text="visuel ocr", width=30, height=3,
+                           command=lambda : OCR())
+    button_ocr.pack()
 
     ConDB.close()
 

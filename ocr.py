@@ -2,14 +2,15 @@ import pytesseract
 from PIL import Image
 import pandas as pd
 import tkinter as tk
-from tkinter import ttk
+from tkinter import ttk, filedialog
 import cv2
 from pytesseract import image_to_string
 from gestionDB import add_duo_lieux
 
 def OCR():
     #qgrid pour éditer tableau
-    image= cv2.imread("Sans titre.png")
+    chemin_fichier = filedialog.askopenfilename(filetypes=[("Image Files", "*.png;*.jpg;*.jpeg;*.bmp;*.tiff")])
+    image= cv2.imread(chemin_fichier)
     #image = Image.open("Sans titre.png")
     text = pytesseract.image_to_string(image)
 
