@@ -5,8 +5,9 @@ import tkinter as tk
 from tkinter import ttk
 import cv2
 from pytesseract import image_to_string
+from gestionDB import add_duo_lieux
+
 def OCR():
-    from gestionDB import add_duo_lieux
     #qgrid pour éditer tableau
     image= cv2.imread("Sans titre.png")
     #image = Image.open("Sans titre.png")
@@ -72,12 +73,19 @@ def OCR():
 
     tableauhoraire.pack(fill="both", expand=True)
 
-    #for line in lines[firstline + 1:lastline]:
-    #    Start = (line.strip().split()[0])
-    #    End = (line.strip().split()[1])
-    #    Distance = (line.strip().split()[2])
-    #    print(line.strip().split()[:3])
-    #    add_duo_lieux(Start,End,Distance)
+    button_import = tk.Button(table_frame, text="inporter paire lieux", width=30, height=3,
+                               command=lambda: validation(firstline, lastline, lines))
+    button_import.pack()
 
     root.mainloop()
+def validation(firstline, lastline, lines):
+    for line in lines[firstline + 1:lastline]:
+        Start = (line.strip().split()[0])
+        End = (line.strip().split()[1])
+        Distance = (line.strip().split()[2])
+        print(line.strip().split()[:3])
+        add_duo_lieux(Start,End,Distance)
 
+
+
+#OCR()
