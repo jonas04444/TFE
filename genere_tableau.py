@@ -5,6 +5,8 @@ import pandas as pd
 from openpyxl.styles import PatternFill, Border, Side, Font
 from openpyxl.utils.dataframe import dataframe_to_rows
 from openpyxl import Workbook
+from pyexpat.errors import messages
+from tkinter import messagebox
 
 #from ocr import total_row
 
@@ -184,6 +186,7 @@ def export_comparaison_excel(version_actuelle, version_proposition, ligne, sens,
         print(total)
         wb.save(fichier_sortie)
         print(f"Fichier exporté avec succès : {fichier_sortie}")
+        messagebox.showinfo("Réussi", "le fichier a été créé avec succès")
 
     except sqlite3.Error as e:
         print(f"Erreur SQL : {e}")
@@ -193,5 +196,5 @@ def export_comparaison_excel(version_actuelle, version_proposition, ligne, sens,
         if connect:
             connect.close()
 
-export_comparaison_excel("202412", "202501", 41, 2, "comparaison_lignes.xlsx")
+#export_comparaison_excel("202412", "202501", 41, 2, "comparaison_lignes.xlsx")
 

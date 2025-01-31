@@ -1,12 +1,17 @@
 import tkinter as tk
 from math import trunc
-from tkinter import messagebox, ttk, LabelFrame
+from tkinter import messagebox, ttk, LabelFrame, filedialog
 import sqlite3
+
+import pandas as pd
+
 from affichage_donnees import affichage_DB
 from gestionDB import add_lieux, add_duo_lieux, add_temps_parcours, Creer_ligne, Composition_ligne
 from objetdb import NomLieux
 from genere_tableau import export_comparaison_excel
 from ocr import OCR
+from PIL import Image
+import pytesseract
 
 def graph_select(graphiqueur):
     graphiqueur = True
@@ -230,6 +235,29 @@ def gestionLieux():
                                command=lambda: add_temps_parcours(HDebut.get(), HFin.get(),
                                                              int(TempsP.get()), VTempsP.get(), TlistelieuxDebut.get(),TlistelieuxFin.get()))
     button_ajoutTP.pack()
+
+
+def importationexcel():
+
+    image_Excel = filedialog.askopenfilename(filetypes=[("Excel Files", "*.xlsx;*.xls")])
+
+    dataframe = pd.read_excel(image_Excel)
+
+    print(dataframe)
+
+    for _, row in dataframe.iterrows():
+        LieuxDepart = row['Orig.']
+        LieuxArrivee = row['Dest.']
+
+        horaires = row[['0:00', '7:00', '9:00', '15:30', '17:30']].values
+
+        for i, horaire in enumerate(horaires+1):
+            HStart = ['0:00', '7:00', '9:00', '15:30', '17:30'][i]
+            HEnd = HStart
+            Temps = horaire
+            VersionT = 202502
+            print(dataframe.head())
+            #add_temps_parcours(HStart, HEnd, Temps, VersionT, LieuxDepart, LieuxArrivee)
 
 def Creation_ligne():
 
